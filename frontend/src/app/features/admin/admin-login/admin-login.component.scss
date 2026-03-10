@@ -1,0 +1,128 @@
+.admin-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 1.5rem;
+  background-color: var(--color-bg-dark);
+
+  &__card {
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__header {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__icon {
+    font-size: 2.5rem;
+    color: var(--color-primary);
+  }
+
+  &__title {
+    font-size: 1.25rem;
+    color: var(--color-text-primary);
+  }
+
+  &__subtitle {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background-color: rgba(229, 115, 115, 0.10);
+    border: 1px solid rgba(229, 115, 115, 0.30);
+    border-radius: var(--radius-md);
+    color: #e57373;
+    font-size: 0.875rem;
+  }
+
+  &__submit {
+    width: 100%;
+    &:disabled { opacity: 0.6; cursor: not-allowed; }
+  }
+
+  &__spinner {
+    animation: spin 1.2s linear infinite;
+  }
+}
+
+/* ── Reuse field styles from booking ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  &__label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    outline: none;
+    transition: border-color var(--transition-fast);
+
+    &::placeholder { color: var(--color-text-muted); }
+    &:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px var(--color-primary-20);
+    }
+    &--error { border-color: #e57373; }
+  }
+
+  &__password-wrapper {
+    position: relative;
+  }
+
+  &__password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+
+    &:hover { color: var(--color-primary); }
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

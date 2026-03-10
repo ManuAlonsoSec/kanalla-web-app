@@ -1,0 +1,191 @@
+/* ── Section shell ────────────────────────────────────────────────────────── */
+.capacity {
+  &__header {
+    margin-bottom: 1.75rem;
+
+    h2 {
+      font-size: 1.25rem;
+      margin-bottom: 0.375rem;
+    }
+  }
+
+  &__hint {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    max-width: 56ch;
+    line-height: 1.6;
+  }
+
+  &__loading {
+    color: var(--color-text-muted);
+    text-align: center;
+    padding: 3rem;
+  }
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+.capacity__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.75rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  max-width: 480px;
+
+  @media (min-width: 600px) {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* ── Icon ─────────────────────────────────────────────────────────────────── */
+.capacity__icon-wrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary-10);
+  color: var(--color-primary);
+
+  .material-symbols-outlined {
+    font-size: 1.875rem;
+  }
+}
+
+/* ── Field ────────────────────────────────────────────────────────────────── */
+.capacity__field-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.capacity__label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.capacity__range-hint {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin-top: 0.125rem;
+}
+
+/* ── Input row with stepper buttons ──────────────────────────────────────── */
+.capacity__input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.capacity__stepper {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+
+  .material-symbols-outlined {
+    font-size: 1.1rem;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-primary-10);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+.capacity__input {
+  width: 5rem;
+  text-align: center;
+  padding: 0.45rem 0.5rem;
+  background-color: var(--color-bg-dark);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  transition: border-color 0.15s;
+
+  /* Remove native spinner arrows */
+  appearance: textfield;
+  -moz-appearance: textfield;
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+}
+
+/* ── Validation error ─────────────────────────────────────────────────────── */
+.capacity__error {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  color: #e57373;
+
+  .material-symbols-outlined {
+    font-size: 1rem;
+  }
+}
+
+/* ── Save button ──────────────────────────────────────────────────────────── */
+.capacity__save {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  padding: 0.625rem 1.25rem;
+  white-space: nowrap;
+  align-self: flex-end;
+
+  @media (min-width: 600px) {
+    align-self: center;
+  }
+
+  .material-symbols-outlined {
+    font-size: 1.05rem;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+/* ── Spin animation ───────────────────────────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spin {
+  animation: spin 0.9s linear infinite;
+}

@@ -1,0 +1,98 @@
+<section class="capacity" aria-label="Configuración de aforo">
+
+  <div class="capacity__header">
+    <h2>Aforo máximo</h2>
+    <p class="capacity__hint">
+      Define el <strong>aforo total</strong> del restaurante. Este valor se usa para comprobar que no hay
+      demasiadas reservas solapadas en el mismo horario (ventana de ±1 hora). Las reservas de 10 o más personas
+      siempre requieren llamar directamente al restaurante, independientemente de este valor.
+    </p>
+  </div>
+
+  @if (loading()) {
+    <p class="capacity__loading">Cargando configuración...</p>
+  } @else {
+
+    <div class="capacity__card">
+
+      <div class="capacity__icon-wrap" aria-hidden="true">
+        <span class="material-symbols-outlined">groups</span>
+      </div>
+
+      <div class="capacity__field-wrap">
+        <label class="capacity__label" for="max-guests-input">
+          Máximo de comensales por reserva
+        </label>
+
+        <div class="capacity__input-row">
+          <button
+            class="capacity__stepper"
+            type="button"
+            aria-label="Reducir"
+            [disabled]="maxGuests() <= min"
+            (click)="updateValue(maxGuests() - 1)"
+          >
+            <span class="material-symbols-outlined">remove</span>
+          </button>
+
+          <input
+            id="max-guests-input"
+            class="capacity__input"
+            type="number"
+            [min]="min"
+            [max]="max"
+            [ngModel]="maxGuests()"
+            (ngModelChange)="updateValue($event)"
+          />
+
+          <button
+            class="capacity__stepper"
+            type="button"
+            aria-label="Aumentar"
+            [disabled]="maxGuests() >= max"
+            (click)="updateValue(maxGuests() + 1)"
+          >
+            <span class="material-symbols-outlined">add</span>
+          </button>
+        </div>
+
+        @if (validationError()) {
+          <p class="capacity__error" role="alert">
+            <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+            {{ validationError() }}
+          </p>
+        }
+
+        <p class="capacity__range-hint">Valor entre {{ min }} y {{ max }}.</p>
+      </div>
+
+      <button
+        class="btn btn-primary capacity__save"
+        [disabled]="saveState() === 'saving' || !!validationError()"
+        (click)="save()"
+      >
+        @switch (saveState()) {
+          @case ('saving') {
+            <span class="material-symbols-outlined spin" aria-hidden="true">progress_activity</span>
+            Guardando…
+          }
+          @case ('saved') {
+            <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+            Guardado
+          }
+          @case ('error') {
+            <span class="material-symbols-outlined" aria-hidden="true">error</span>
+            Error al guardar
+          }
+          @default {
+            <span class="material-symbols-outlined" aria-hidden="true">save</span>
+            Guardar
+          }
+        }
+      </button>
+
+    </div>
+
+  }
+
+</section>

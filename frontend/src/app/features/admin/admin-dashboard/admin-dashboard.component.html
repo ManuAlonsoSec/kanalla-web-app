@@ -1,0 +1,218 @@
+<div class="dashboard">
+
+  <!-- ── Top Bar ───────────────────────────────────── -->
+  <header class="dash-topbar">
+    <button
+      class="dash-topbar__hamburger"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="admin-drawer"
+      aria-label="Abrir menú"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">
+        {{ menuOpen() ? 'close' : 'menu' }}
+      </span>
+    </button>
+
+    <div class="dash-topbar__brand">
+      <span class="material-symbols-outlined" aria-hidden="true">restaurant_menu</span>
+      <span>KANALLA</span>
+    </div>
+
+    <button class="dash-topbar__logout" (click)="logout()" aria-label="Cerrar sesión">
+      <span class="material-symbols-outlined" aria-hidden="true">logout</span>
+    </button>
+  </header>
+
+  <!-- ── Drawer Backdrop ───────────────────────────── -->
+  @if (menuOpen()) {
+    <div
+      class="dash-backdrop"
+      (click)="closeMenu()"
+      aria-hidden="true"
+    ></div>
+  }
+
+  <!-- ── Slide-in Drawer ───────────────────────────── -->
+  <nav
+    id="admin-drawer"
+    class="dash-drawer"
+    [class.dash-drawer--open]="menuOpen()"
+    aria-label="Menú administración"
+  >
+    <p class="dash-drawer__label">Panel de administración</p>
+
+    <button
+      class="dash-drawer__item"
+      [class.dash-drawer__item--active]="activeTab() === 'reservations'"
+      (click)="setTab('reservations')"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">table_restaurant</span>
+      Reservas
+    </button>
+
+    <button
+      class="dash-drawer__item"
+      [class.dash-drawer__item--active]="activeTab() === 'menu'"
+      (click)="setTab('menu')"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+      Carta PDF
+    </button>
+
+    <button
+      class="dash-drawer__item"
+      [class.dash-drawer__item--active]="activeTab() === 'schedule'"
+      (click)="setTab('schedule')"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+      Horario
+    </button>
+
+    <button
+      class="dash-drawer__item"
+      [class.dash-drawer__item--active]="activeTab() === 'capacity'"
+      (click)="setTab('capacity')"
+    >
+      <span class="material-symbols-outlined" aria-hidden="true">groups</span>
+      Aforo
+    </button>
+  </nav>
+
+  <!-- ── Main Content ──────────────────────────────── -->
+  <main class="dashboard__content">
+
+    <!-- Reservations Tab -->
+    @if (activeTab() === 'reservations') {
+      <section aria-label="Gestión de reservas">
+        <div class="dashboard__section-header">
+          <h2>Reservas</h2>
+          <button class="btn btn-outline btn--sm" (click)="loadReservations()">
+            <span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+            Actualizar
+          </button>
+        </div>
+
+        @if (loadingReservations()) {
+          <p class="dashboard__loading">Cargando reservas...</p>
+        } @else if (reservations().length === 0) {
+          <p class="dashboard__empty">No hay reservas aún.</p>
+        } @else {
+          <div class="table-wrapper">
+            <table class="res-table" aria-label="Lista de reservas">
+              <thead>
+                <tr>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Fecha</th>
+                  <th scope="col">Hora</th>
+                  <th scope="col">Personas</th>
+                  <th scope="col">Teléfono</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (r of reservations(); track r.id) {
+                  <tr>
+                    <td>
+                      <span class="res-table__name">{{ r.name }}</span>
+                      <span class="res-table__email">{{ r.email }}</span>
+                    </td>
+                    <td>{{ r.date | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ r.time }}</td>
+                    <td>{{ r.guests }}</td>
+                    <td>{{ r.phone }}</td>
+                    <td>
+                      <span class="badge" [class]="'badge--' + r.status">
+                        {{ r.status }}
+                      </span>
+                    </td>
+                    <td class="res-table__actions">
+                      <button
+                        class="action-btn action-btn--confirm"
+                        title="Confirmar"
+                        (click)="updateStatus(r.id!, 'confirmed')"
+                        aria-label="Confirmar reserva de {{ r.name }}"
+                      >
+                        <span class="material-symbols-outlined" aria-hidden="true">check</span>
+                      </button>
+                      <button
+                        class="action-btn action-btn--cancel"
+                        title="Cancelar"
+                        (click)="updateStatus(r.id!, 'cancelled')"
+                        aria-label="Cancelar reserva de {{ r.name }}"
+                      >
+                        <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                      </button>
+                      <button
+                        class="action-btn action-btn--delete"
+                        title="Eliminar"
+                        (click)="deleteReservation(r.id!)"
+                        aria-label="Eliminar reserva de {{ r.name }}"
+                      >
+                        <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
+    }
+
+    <!-- Menu PDF Tab -->
+    @if (activeTab() === 'menu') {
+      <section aria-label="Gestión de carta PDF">
+        <h2 class="dashboard__section-title">Actualizar Carta (PDF)</h2>
+        <p class="dashboard__hint">Sube un nuevo PDF de la carta. Reemplazará la versión actual.</p>
+
+        <div class="upload-zone">
+          <span class="material-symbols-outlined upload-zone__icon" aria-hidden="true">upload_file</span>
+          <p>Arrastra el PDF aquí o haz clic para seleccionarlo</p>
+          <label class="btn btn-primary upload-zone__btn" for="pdf-upload">
+            <span class="material-symbols-outlined" aria-hidden="true">attach_file</span>
+            Seleccionar PDF
+          </label>
+          <input
+            id="pdf-upload"
+            type="file"
+            accept="application/pdf"
+            class="upload-zone__input"
+            (change)="onPdfUpload($event)"
+          />
+        </div>
+
+        @switch (uploadStatus()) {
+          @case ('uploading') {
+            <p class="upload-status upload-status--loading">Subiendo PDF...</p>
+          }
+          @case ('success') {
+            <p class="upload-status upload-status--success">
+              <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+              Carta actualizada correctamente.
+            </p>
+          }
+          @case ('error') {
+            <p class="upload-status upload-status--error">
+              <span class="material-symbols-outlined" aria-hidden="true">error</span>
+              Error al subir el archivo. Inténtalo de nuevo.
+            </p>
+          }
+        }
+      </section>
+    }
+
+    <!-- Schedule Tab -->
+    @if (activeTab() === 'schedule') {
+      <app-schedule-editor />
+    }
+
+    <!-- Capacity Tab -->
+    @if (activeTab() === 'capacity') {
+      <app-capacity-editor />
+    }
+
+  </main>
+</div>

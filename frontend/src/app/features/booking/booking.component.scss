@@ -1,0 +1,239 @@
+.booking {
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  &__header {
+    text-align: center;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+  }
+
+  &__subtitle {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  &__submit {
+    margin-top: 0.5rem;
+    width: 100%;
+    &:disabled { opacity: 0.6; cursor: not-allowed; }
+  }
+
+  &__spinner {
+    animation: spin 1.2s linear infinite;
+  }
+
+  &__success,
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+    padding: 3rem 0;
+
+    h3 { font-size: 1.25rem; }
+    p  { color: var(--color-text-secondary); font-size: 0.875rem; }
+  }
+
+  &__success-icon {
+    font-size: 3.5rem;
+    color: #66bb6a;
+  }
+
+  &__error .material-symbols-outlined {
+    font-size: 3rem;
+    color: #e57373;
+  }
+
+  &__error--full .material-symbols-outlined {
+    color: #ffa726; // amber — "not an error, just full"
+  }
+  &__error--full {
+    p { color: var(--color-text-secondary); }
+  }
+
+  &__auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+    padding: 3rem 0;
+
+    p { color: var(--color-text-secondary); font-size: 0.875rem; }
+  }
+
+  &__auth-hint {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+  }
+}
+
+/* ── Form fields ── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+
+  &__label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.02em;
+  }
+
+  &__input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    outline: none;
+    transition: border-color var(--transition-fast);
+    appearance: none;
+    -webkit-appearance: none;
+
+    &::placeholder { color: var(--color-text-muted); }
+
+    &:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 2px var(--color-primary-20);
+    }
+
+    &--error {
+      border-color: #e57373;
+      &:focus { box-shadow: 0 0 0 2px rgba(229, 115, 115, 0.2); }
+    }
+
+    &--textarea { resize: vertical; min-height: 5rem; }
+  }
+
+  &__error {
+    font-size: 0.75rem;
+    color: #e57373;
+
+    &--call {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--color-primary);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      background: var(--color-primary-10);
+      border: 1px solid rgba(var(--color-primary-rgb, 139 115 85) / 0.3);
+      border-radius: var(--radius-sm);
+      padding: 0.5rem 0.75rem;
+      margin-top: 0.25rem;
+
+      .material-symbols-outlined {
+        font-size: 1rem;
+      }
+
+      a {
+        color: var(--color-primary);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+    }
+  }
+}
+
+/* Consent notice below submit button */
+.booking__consent {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  text-align: center;
+
+  &-link {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+
+    &:hover { opacity: 0.8; }
+  }
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* Select inherits field__input but needs a custom dropdown arrow */
+select.field__input {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a0956e' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+  cursor: pointer;
+
+  option {
+    background-color: #1e1c1a;
+    color: var(--color-text-primary);
+  }
+}
+
+/* Slot state: loading */
+.field__slots-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  cursor: default;
+
+  .field__slots-spinner {
+    font-size: 1.1rem;
+    animation: spin 1s linear infinite;
+    color: var(--color-primary);
+  }
+}
+
+/* Slot state: hint (no date yet) */
+.field__slots-hint {
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  cursor: default;
+  font-style: italic;
+}
+
+/* Slot state: closed day */
+.field__closed {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.65rem 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+
+  .material-symbols-outlined { font-size: 1.1rem; }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

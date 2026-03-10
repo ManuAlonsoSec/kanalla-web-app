@@ -1,0 +1,138 @@
+<section class="schedule" aria-label="Gestión de horarios">
+  <div class="schedule__header">
+    <h2>Horario semanal</h2>
+    <p class="schedule__hint">
+      Define los dos turnos de cada día. Si el local está cerrado ese día, activa el interruptor "Cerrado".
+    </p>
+  </div>
+
+  @if (loading()) {
+    <p class="schedule__loading">Cargando horarios...</p>
+  } @else {
+    <div class="schedule__grid">
+      @for (day of days(); track day.day_of_week; let i = $index) {
+        <div class="day-card" [class.day-card--closed]="day.is_closed">
+
+          <!-- Day header -->
+          <div class="day-card__header">
+            <span class="day-card__name">{{ dayNames[i] }}</span>
+
+            <label class="toggle" [attr.aria-label]="'Cerrado ' + dayNames[i]">
+              <input
+                type="checkbox"
+                [checked]="day.is_closed"
+                (change)="updateDay(i, { is_closed: $any($event.target).checked })"
+              />
+              <span class="toggle__track">
+                <span class="toggle__thumb"></span>
+              </span>
+              <span class="toggle__label">Cerrado</span>
+            </label>
+          </div>
+
+          @if (!day.is_closed) {
+            <!-- Shift 1 -->
+            <div class="day-card__shift">
+              <span class="day-card__shift-label">
+                <span class="material-symbols-outlined" aria-hidden="true">wb_sunny</span>
+                Turno 1
+              </span>
+              <div class="day-card__times">
+                <label class="time-field">
+                  <span>Apertura</span>
+                  <input
+                    type="time"
+                    [ngModel]="day.shift1_start ?? ''"
+                    (ngModelChange)="updateDay(i, { shift1_start: $event })"
+                  />
+                </label>
+                <span class="day-card__dash">–</span>
+                <label class="time-field">
+                  <span>Cierre</span>
+                  <input
+                    type="time"
+                    [ngModel]="day.shift1_end ?? ''"
+                    (ngModelChange)="updateDay(i, { shift1_end: $event })"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <!-- Shift 2 -->
+            <div class="day-card__shift">
+              <span class="day-card__shift-label">
+                <span class="material-symbols-outlined" aria-hidden="true">nights_stay</span>
+                Turno 2
+                <label class="toggle toggle--sm" aria-label="Activar turno 2">
+                  <input
+                    type="checkbox"
+                    [checked]="day.shift2_start !== null"
+                    (change)="updateDay(i, $any($event.target).checked
+                      ? { shift2_start: '20:00', shift2_end: '23:00' }
+                      : { shift2_start: null, shift2_end: null })"
+                  />
+                  <span class="toggle__track">
+                    <span class="toggle__thumb"></span>
+                  </span>
+                </label>
+              </span>
+
+              @if (day.shift2_start !== null) {
+                <div class="day-card__times">
+                  <label class="time-field">
+                    <span>Apertura</span>
+                    <input
+                      type="time"
+                      [ngModel]="day.shift2_start || ''"
+                      (ngModelChange)="updateDay(i, { shift2_start: $event })"
+                    />
+                  </label>
+                  <span class="day-card__dash">–</span>
+                  <label class="time-field">
+                    <span>Cierre</span>
+                    <input
+                      type="time"
+                      [ngModel]="day.shift2_end || ''"
+                      (ngModelChange)="updateDay(i, { shift2_end: $event })"
+                    />
+                  </label>
+                </div>
+              } @else {
+                <p class="day-card__no-shift">Sin segundo turno</p>
+              }
+            </div>
+          }
+
+          <!-- Save button -->
+          <button
+            class="btn btn-primary day-card__save"
+            [class.btn--saving]="day.saveState === 'saving'"
+            [disabled]="day.saveState === 'saving'"
+            (click)="saveDay(i)"
+            [attr.aria-label]="'Guardar ' + dayNames[i]"
+          >
+            @switch (day.saveState) {
+              @case ('saving') {
+                <span class="material-symbols-outlined spin" aria-hidden="true">progress_activity</span>
+                Guardando…
+              }
+              @case ('saved') {
+                <span class="material-symbols-outlined" aria-hidden="true">check</span>
+                Guardado
+              }
+              @case ('error') {
+                <span class="material-symbols-outlined" aria-hidden="true">error</span>
+                Error
+              }
+              @default {
+                <span class="material-symbols-outlined" aria-hidden="true">save</span>
+                Guardar
+              }
+            }
+          </button>
+
+        </div>
+      }
+    </div>
+  }
+</section>

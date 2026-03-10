@@ -1,0 +1,207 @@
+<section class="booking section-px" aria-label="Formulario de reserva">
+
+  <header class="booking__header">
+    <h2 class="booking__title">Reserva tu Mesa</h2>
+    <p class="booking__subtitle">Completa el formulario y nos pondremos en contacto contigo</p>
+  </header>
+
+  @switch (status()) {
+
+    @case ('success') {
+      <div class="booking__success" role="alert">
+        <span class="material-symbols-outlined booking__success-icon" aria-hidden="true">check_circle</span>
+        <h3>¡Reserva enviada!</h3>
+        <p>Hemos recibido tu solicitud. Te confirmaremos por email en breve.</p>
+        <p>Si quieres puedes ver nuestra carta aquí.</p>
+        <a href="/menu"><button class="btn btn-primary">Ver carta</button></a>
+        <p>O puedes hacer otra reserva aquí.</p>
+        <button class="btn btn-outline" (click)="restart()">Hacer otra reserva</button>
+      </div>
+    }
+
+    @case ('auth') {
+      <div class="booking__auth" role="status">
+        <span class="material-symbols-outlined booking__spinner" aria-hidden="true">progress_activity</span>
+        <p>Abriendo Google para verificar tu identidad…</p>
+        <p class="booking__auth-hint">Si el popup no se abre, comprueba que no esté bloqueado por el navegador.</p>
+      </div>
+    }
+
+    @case ('error') {
+      <div class="booking__error" role="alert">
+        <span class="material-symbols-outlined" aria-hidden="true">error</span>
+        <p>{{ errorMessage() }}</p>
+        <button class="btn btn-outline" (click)="restart()">Intentar de nuevo</button>
+      </div>
+    }
+
+    @case ('full') {
+      <div class="booking__error booking__error--full" role="alert">
+        <span class="material-symbols-outlined" aria-hidden="true">no_meals</span>
+        <p>{{ errorMessage() }}</p>
+        <button class="btn btn-outline" (click)="restart()">Elegir otro horario</button>
+      </div>
+    }
+
+    @default {
+      <form class="booking__form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+        <div class="field">
+          <label class="field__label" for="name">Nombre completo *</label>
+          <input
+            id="name"
+            class="field__input"
+            type="text"
+            formControlName="name"
+            placeholder="Tu nombre"
+            autocomplete="name"
+            [class.field__input--error]="form.controls.name.invalid && form.controls.name.touched"
+          />
+          @if (form.controls.name.invalid && form.controls.name.touched) {
+            <span class="field__error" role="alert">Introduce tu nombre completo</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="email">Email *</label>
+          <input
+            id="email"
+            class="field__input"
+            type="email"
+            formControlName="email"
+            placeholder="tu@email.com"
+            autocomplete="email"
+            [class.field__input--error]="form.controls.email.invalid && form.controls.email.touched"
+          />
+          @if (form.controls.email.invalid && form.controls.email.touched) {
+            <span class="field__error" role="alert">Introduce un email válido</span>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="phone">Teléfono *</label>
+          <input
+            id="phone"
+            class="field__input"
+            type="tel"
+            formControlName="phone"
+            placeholder="+34 600 000 000"
+            autocomplete="tel"
+            [class.field__input--error]="form.controls.phone.invalid && form.controls.phone.touched"
+          />
+          @if (form.controls.phone.invalid && form.controls.phone.touched) {
+            <span class="field__error" role="alert">Introduce un número de teléfono válido</span>
+          }
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field__label" for="date">Fecha *</label>
+            <input
+              id="date"
+              class="field__input"
+              type="date"
+              formControlName="date"
+              [min]="today"
+              [class.field__input--error]="form.controls.date.invalid && form.controls.date.touched"
+            />
+            @if (form.controls.date.invalid && form.controls.date.touched) {
+              <span class="field__error" role="alert">Elige una fecha</span>
+            }
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="time">Hora *</label>
+
+            @if (slotsLoading()) {
+              <div class="field__input field__slots-loading" aria-live="polite">
+                <span class="material-symbols-outlined field__slots-spinner" aria-hidden="true">progress_activity</span>
+                Cargando horarios…
+              </div>
+            } @else if (dayIsClosed()) {
+              <p class="field__closed" role="alert">
+                <span class="material-symbols-outlined" aria-hidden="true">event_busy</span>
+                El restaurante está cerrado este día.
+              </p>
+            } @else if (availableSlots().length === 0) {
+              <div class="field__input field__slots-hint">
+                Selecciona fecha
+              </div>
+            } @else {
+              <select
+                id="time"
+                class="field__input"
+                formControlName="time"
+                [class.field__input--error]="form.controls.time.invalid && form.controls.time.touched"
+              >
+                <option value="" disabled>-- Elige un horario --</option>
+                @for (slot of availableSlots(); track slot) {
+                  <option [value]="slot">{{ slot }}</option>
+                }
+              </select>
+              @if (form.controls.time.invalid && form.controls.time.touched) {
+                <span class="field__error" role="alert">Elige un horario</span>
+              }
+            }
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="guests">Número de personas *</label>
+          <input
+            id="guests"
+            class="field__input"
+            type="number"
+            formControlName="guests"
+            min="1"
+            max="9"
+            [class.field__input--error]="form.controls.guests.invalid && form.controls.guests.touched"
+          />
+          @if (form.controls.guests.touched) {
+            @if (form.controls.guests.errors?.['min'] || form.controls.guests.errors?.['required']) {
+              <span class="field__error" role="alert">Mínimo 1 persona</span>
+            } @else if (form.controls.guests.errors?.['max']) {
+              <span class="field__error field__error--call" role="alert">
+                <span class="material-symbols-outlined" aria-hidden="true">phone</span>
+                Para reservas de 10 o más personas llámanos directamente al
+                <a href="tel:+34668569390"><strong>+34 668 569 390</strong></a>
+              </span>
+            }
+          }
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="notes">Notas adicionales</label>
+          <textarea
+            id="notes"
+            class="field__input field__input--textarea"
+            formControlName="notes"
+            rows="3"
+            placeholder="Alergias, ocasiones especiales, preferencias..."
+          ></textarea>
+        </div>
+
+        <button
+          class="btn btn-primary booking__submit"
+          type="submit"
+          [disabled]="status() === 'submitting' || status() === 'auth'"
+        >
+          @if (status() === 'submitting' || status() === 'auth') {
+            <span class="material-symbols-outlined booking__spinner" aria-hidden="true">progress_activity</span>
+            @if (status() === 'auth') { Verificando identidad... } @else { Comprobando disponibilidad... }
+          } @else {
+            <span class="material-symbols-outlined" aria-hidden="true">send</span>
+            Confirmar Reserva
+          }
+        </button>
+
+        <p class="booking__consent">
+          Al confirmar la reserva aceptas nuestra
+          <a routerLink="/cookies" target="_blank" class="booking__consent-link">política de cookies</a>.
+        </p>
+
+      </form>
+    }
+
+  }
+</section>
