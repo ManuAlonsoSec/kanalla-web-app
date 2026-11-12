@@ -1,0 +1,10 @@
+{
+  "detector": {
+    "ignoreRules": [
+      "kicker-above-heading",
+      "all-caps-body"
+    ],
+    "ignoreFiles": [],
+    "ignoreValues": []
+  }
+}

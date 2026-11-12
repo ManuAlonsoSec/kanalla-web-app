@@ -58,3 +58,10 @@ ARCHITECTURE.md
 # Vercel
 # ──────────────────────────────────────────
 .vercel/
+
+# ──────────────────────────────────────────
+# Skills de agente (se reinstalan desde skills-lock.json: ver README)
+# ──────────────────────────────────────────
+.claude/skills/
+.agents/skills/
+.impeccable/config.local.json
