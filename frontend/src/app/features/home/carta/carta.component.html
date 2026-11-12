@@ -29,10 +29,37 @@
   </li>
 </ng-template>
 
-<!-- Hamburguesas: título a lo ancho; el aviso de las patatas junto a un collage de
-     dos recortes; la lista a dos columnas -->
+<!-- Hamburguesas: título a lo ancho; La Puerca destacada con su foto; el aviso de las
+     patatas junto a un collage de dos recortes; el resto de la lista a dos columnas -->
 <section class="sec sec--burgers" aria-labelledby="sec-hamburguesas">
   <h3 id="sec-hamburguesas" class="sec__titulo sec__titulo--xl">{{ s['hamburguesas'].titulo }}</h3>
+
+  <!-- Plato destacado: La Puerca con su foto -->
+  <article class="destacada" [class.is-apuntado]="cuantos(destacada.id)">
+    <figure class="destacada__foto">
+      <picture class="recorte">
+        <source type="image/avif" [attr.srcset]="fotos.puerca.avif" sizes="(min-width: 1100px) 34vw, 92vw" />
+        <source type="image/webp" [attr.srcset]="fotos.puerca.webp" sizes="(min-width: 1100px) 34vw, 92vw" />
+        <img [src]="fotos.puerca.jpg" [alt]="fotos.puerca.alt" [width]="fotos.puerca.width" [height]="fotos.puerca.height" loading="lazy" decoding="async" />
+      </picture>
+    </figure>
+    <div class="destacada__txt">
+      <h4 class="destacada__nombre">{{ destacada.nombre }}</h4>
+      <p class="destacada__precio">
+        {{ destacada.precio }}
+        @if (cuantos(destacada.id)) {
+          <span class="plato__n">Llevas {{ cuantos(destacada.id) }}</span>
+        }
+      </p>
+      @if (destacada.descripcion) {
+        <p class="plato__desc">{{ destacada.descripcion }}</p>
+      }
+      <button type="button" class="patatas__btn destacada__btn" (click)="apuntar(destacada.id)">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5v11M2.5 8h11" /></svg>
+        <span>Apúntala<span class="sr-only">: {{ destacada.nombre }}</span></span>
+      </button>
+    </div>
+  </article>
 
   <div class="sec__intro">
   <p class="patatas">
@@ -58,7 +85,7 @@
   </div>
 
   <ul class="platos platos--dos" role="list">
-    @for (p of s['hamburguesas'].platos; track p.id) {
+    @for (p of burgers; track p.id) {
       <ng-container *ngTemplateOutlet="plato; context: { $implicit: p }" />
     }
   </ul>

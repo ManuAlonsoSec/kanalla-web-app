@@ -65,3 +65,11 @@ ARCHITECTURE.md
 .claude/skills/
 .agents/skills/
 .impeccable/config.local.json
+
+# ──────────────────────────────────────────
+# docs/: solo se suben los .md (análisis y auditorías). Capturas, maquetas y
+# salidas del detector se quedan en local.
+# ──────────────────────────────────────────
+/docs/**
+!/docs/**/
+!/docs/**/*.md

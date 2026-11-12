@@ -162,6 +162,7 @@ select.field__input {
   line-height: 1.5;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  text-wrap: balance; // sin «Google.» colgando solo en la última línea
 }
 
 .booking__submit {

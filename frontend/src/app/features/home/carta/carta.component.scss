@@ -197,6 +197,58 @@
 }
 
 // ── Hamburguesas ─────────────────────────────────────────────────────────────
+// Plato destacado: la foto grande de La Puerca, recortada a tijera, con su nombre,
+// precio y «Apúntala».
+.destacada {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.destacada__foto {
+  margin: 0 -0.5rem 0 0;
+  rotate: 1.5deg;
+}
+
+.destacada__txt {
+  display: grid;
+  justify-items: start;
+  gap: 0.35rem;
+}
+
+.destacada__nombre {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 9cqi, 4.25rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+.destacada__precio {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--kraft-copper);
+  font-variant-numeric: tabular-nums;
+}
+
+// La descripción reutiliza la tipografía de .plato__desc, sin su área de rejilla
+.destacada__txt .plato__desc {
+  grid-area: auto;
+  max-width: 40ch;
+}
+
+.destacada__btn {
+  margin-top: 0.75rem;
+
+  .is-apuntado > .destacada__txt > & {
+    color: var(--carta-bottom);
+    background-color: var(--kraft-ink);
+  }
+}
+
 .sec__intro {
   display: grid;
   gap: 1.75rem;
@@ -403,6 +455,12 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: clamp(1.75rem, 5cqi, 3.5rem);
     row-gap: 1.75rem;
+  }
+
+  .destacada {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+    align-items: center;
+    column-gap: clamp(1.5rem, 4cqi, 3rem);
   }
 
   .sec__intro {

@@ -28,7 +28,7 @@
 
   /* Ritmo */
   --gutter: clamp(16px, 5vw, 56px);
-  --header-h: 76px;
+  --header-h: 60px;
   --bar-h: 0px; /* alto de la barra fija de pedido (móvil): deja sitio al foco y al pie */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -70,7 +70,7 @@
 
 @media (min-width: 900px) {
   :root {
-    --header-h: 104px;
+    --header-h: 72px;
   }
 }
 

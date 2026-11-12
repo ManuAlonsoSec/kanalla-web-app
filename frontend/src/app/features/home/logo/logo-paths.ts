@@ -11,7 +11,17 @@ export const LOGO_LAYERS = {
     "px": {
       "w": 88,
       "h": 55
-    }
+    },
+    "grande": [
+      {
+        "logoW": 420,
+        "w": 164
+      },
+      {
+        "logoW": 748,
+        "w": 292
+      }
+    ]
   },
   "burger": {
     "avif": "images/logo-capas/burger.avif",
@@ -22,7 +32,17 @@ export const LOGO_LAYERS = {
     "px": {
       "w": 95,
       "h": 62
-    }
+    },
+    "grande": [
+      {
+        "logoW": 420,
+        "w": 179
+      },
+      {
+        "logoW": 748,
+        "w": 318
+      }
+    ]
   },
   "glasses": {
     "avif": "images/logo-capas/glasses.avif",
@@ -33,7 +53,17 @@ export const LOGO_LAYERS = {
     "px": {
       "w": 87,
       "h": 27
-    }
+    },
+    "grande": [
+      {
+        "logoW": 420,
+        "w": 162
+      },
+      {
+        "logoW": 748,
+        "w": 289
+      }
+    ]
   },
   "face": {
     "avif": "images/logo-capas/face.avif",
@@ -44,7 +74,17 @@ export const LOGO_LAYERS = {
     "px": {
       "w": 131,
       "h": 89
-    }
+    },
+    "grande": [
+      {
+        "logoW": 420,
+        "w": 245
+      },
+      {
+        "logoW": 748,
+        "w": 437
+      }
+    ]
   },
   "text": {
     "avif": "images/logo-capas/text.avif",
@@ -55,7 +95,17 @@ export const LOGO_LAYERS = {
     "px": {
       "w": 224,
       "h": 79
-    }
+    },
+    "grande": [
+      {
+        "logoW": 420,
+        "w": 419
+      },
+      {
+        "logoW": 748,
+        "w": 746
+      }
+    ]
   }
 } as const;
 export const LOGO_STROKES: Record<'flames' | 'burger' | 'glasses' | 'face' | 'text', string> = {

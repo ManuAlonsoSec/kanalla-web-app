@@ -4,7 +4,7 @@
 //                > .logo__inner (parpadeo)
 //                  > picture > img
 //
-// Solo se mueven las llamas, y solo cuando el logo es un enlace (cabecera):
+// Solo se mueven las llamas, y solo dentro de un enlace (cabecera) o de `.logo-vivo` (hero):
 // · al cargar, un parpadeo lento: 2 ciclos de 2,2 s (menos de 5 s → WCAG 2.2.2)
 // · al pasar el ratón o enfocar, se avivan mientras dure
 // Con «reducir movimiento», quieto.
@@ -46,16 +46,16 @@
   }
 }
 
-a:is(:hover, :focus-visible) .logo__layer--flames {
+:is(a, .logo-vivo):is(:hover, :focus-visible) .logo__layer--flames {
   transform: scaleY(1.14) translateY(-2%);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  a .logo__layer--flames .logo__inner {
+  :is(a, .logo-vivo) .logo__layer--flames .logo__inner {
     animation: logo-flicker 2.2s cubic-bezier(0.37, 0, 0.63, 1) 0.4s 2 alternate both;
   }
 
-  a:is(:hover, :focus-visible) .logo__layer--flames .logo__inner {
+  :is(a, .logo-vivo):is(:hover, :focus-visible) .logo__layer--flames .logo__inner {
     animation: logo-flare 0.42s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
   }
 }

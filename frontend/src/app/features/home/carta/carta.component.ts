@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject, output } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { CARTA, FOTOS, recorteFallback, recorteSrcset, type FotoSlug, type SeccionCarta } from '../../../../data/datos';
+import { CARTA, FOTOS, PLATOS, recorteFallback, recorteSrcset, type FotoSlug, type SeccionCarta } from '../../../../data/datos';
 import { ComandaService } from '../comanda/comanda.service';
 
 function foto(slug: FotoSlug) {
@@ -11,7 +11,8 @@ function foto(slug: FotoSlug) {
 /**
  * La carta como una hoja larga (sin pestañas), con la voz de la carta impresa.
  * Cada plato lleva su «+» para apuntarlo en la comanda.
- * Cada sección tiene su composición: hamburguesas a dos columnas con un collage,
+ * Cada sección tiene su composición: hamburguesas con La Puerca destacada, un collage
+ * y la lista a dos columnas,
  * extras en una tira, entrantes con la foto al lado, ensaladas y postres en pareja.
  */
 @Component({
@@ -30,7 +31,16 @@ export class CartaComponent {
   readonly alergenos = output<void>();
 
   protected readonly s = Object.fromEntries(CARTA.map((sec) => [sec.id, sec])) as Record<string, SeccionCarta>;
-  protected readonly fotos = { clasica: foto('la-clasica'), ramona: foto('la-ramona'), nachos: foto('nachos') };
+  protected readonly fotos = {
+    puerca: foto('la-puerca'),
+    clasica: foto('la-clasica'),
+    ramona: foto('la-ramona'),
+    nachos: foto('nachos'),
+  };
+
+  /** Plato destacado: sale arriba con su foto y no se repite en la lista. */
+  protected readonly destacada = PLATOS.get('la-puerca')!;
+  protected readonly burgers = this.s['hamburguesas'].platos.filter((p) => p.id !== this.destacada.id);
 
   protected cuantos(id: string): number {
     return this.comanda.porPlato().get(id) ?? 0;

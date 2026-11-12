@@ -1,8 +1,12 @@
 // ──────────────────────────────────────────────────────────────────────────────
 // integrar-foto.mjs — Integra en el kraft una foto hecha sobre otro fondo.
 //
-//   swift scripts/vision-mask.swift public/images/DSC08550.jpg scripts/out/DSC08550-mask.png
+//   swift scripts/vision-mask.swift ../../kanalla-originales/DSC08550.jpg scripts/out/DSC08550-mask.png
 //   node scripts/integrar-foto.mjs
+//
+// El original (13 MB) vive FUERA del repo, en ../kanalla-originales/ (junto a la carpeta
+// del proyecto), o donde diga la variable KANALLA_ORIGINALES. En public/ solo van las
+// versiones optimizadas.
 //
 // · Separa la burger del fondo con la máscara de Vision (macOS, en local).
 // · Quita el reflejo verde de las plantas en los bordes (despill).
@@ -15,7 +19,8 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const SRC = resolve(root, 'public/images/DSC08550.jpg');
+const ORIGINALES = process.env.KANALLA_ORIGINALES ?? resolve(root, '../../kanalla-originales');
+const SRC = resolve(ORIGINALES, 'DSC08550.jpg');
 const MASK = resolve(root, 'scripts/out/DSC08550-mask.png');
 const OUT = resolve(root, 'public/images/la-puerca-kraft.jpg');
 

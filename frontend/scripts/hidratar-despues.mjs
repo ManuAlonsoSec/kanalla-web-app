@@ -2,12 +2,13 @@
 // hidratar-despues.mjs — Paso posterior a `ng build` (lo ejecuta `npm run build`).
 //
 // En las páginas prerenderizadas de la home (/ y /reservas) el navegador pinta
-// primero el HTML (titular, foto, carta y botones de pedido, que funcionan sin JS)
+// primero el HTML (logo, titular, carta y botones de pedido, que funcionan sin JS)
 // y descarga Angular justo después. Arranca con lo primero que pase:
-//   · el navegador informa de que ya pintó la foto del hero (su LCP),
+//   · el navegador informa de que ya pintó el hero (su LCP: el titular o el logo),
 //   · el usuario toca la pantalla o pulsa una tecla,
-//   · 1,5 s después de `load`, o 3 s en total (por si la foto no llega).
-// Así ni el primer pintado ni la foto esperan a evaluar el JavaScript.
+//   · 1,5 s después de `load`, o 3 s en total.
+// Así el primer pintado no espera a evaluar el JavaScript. Medido con el hero del
+// logo (Lighthouse móvil, 3 pasadas): 99 con este paso y 93 sin él.
 //
 // · Los toques anteriores a la hidratación (un «+», abrir alérgenos) los guarda la
 //   repetición de eventos de Angular (script ng-event-dispatch-contract del HTML).
@@ -40,7 +41,7 @@ for (const pagina of PAGINAS) {
   const cargador =
     `<script type="module">` +
     `let h=0;const u=()=>{h||(h=1,setTimeout(()=>import("/${m[1]}")))};` +
-    `try{new PerformanceObserver(l=>{for(const e of l.getEntries())if(e.element&&e.element.closest(".hero__foto"))u()})` +
+    `try{new PerformanceObserver(l=>{for(const e of l.getEntries())if(e.element&&e.element.closest(".hero"))u()})` +
     `.observe({type:"largest-contentful-paint",buffered:!0})}catch(e){u()}` +
     `for(const t of["pointerdown","keydown"])addEventListener(t,u,{once:!0,capture:!0,passive:!0});` +
     `addEventListener("load",()=>setTimeout(u,1500),{once:!0});setTimeout(u,3e3)` +

@@ -58,14 +58,14 @@ Vinculantes (del brief y del dueño):
 - Manifiesto: «Ser un Kanalla es una personalidad, un estilo de vida, algo con lo que se nace o no se nace. No podemos enseñarte a serlo, pero sí que lo saborees.» Cierre: «Bienvenidos a nuestra experiencia.»
 - Pedido directo: botón principal «PIDE POR WHATSAPP», secundario «LLAMA: 668 56 93 90»; copy «PIDE DIRECTO. SIN INTERMEDIARIOS, CON TODO EL SABOR.»
 - **Dirección de arte (elegida el 12-11-2026): «La comanda» con hero cartel.**
-  - **Hero:** cartel tipográfico, Anton a sangre y composición asimétrica, con La Puerca recortada a tijera, su nombre y precio, el horario de hoy y las zonas.
+  - **Hero:** el logo es la imagen (grande, a la izquierda, con las llamas animadas) y el titular «KANALLA SE NACE.» va en Anton a sangre a la derecha, con el kicker «GALAPAGAR · BURGERS · ROOFTOP» en cobre, el horario de hoy, las zonas y el talón «Pide directo · WhatsApp». En móvil, el logo arriba y el titular debajo. Sin fotos de platos: esas van solo en la carta, donde La Puerca es el plato destacado.
   - **Resto de la página:** la comanda. Cada plato lleva «+» y el ticket kraft va fijo (lateral en escritorio, barra y hoja en móvil).
 - **Gesto de firma: el ticket**, como mucho tres veces (talón del hero, precio del combo y la comanda). Nada de revelados genéricos al hacer scroll.
 - **Logo:** se ve desde el primer pintado, sin trazo ni viaje al header. Solo se mueven las llamas: un parpadeo lento de menos de 5 s y se avivan al pasar el ratón.
 
 ## Evidence on Hand
 
-- Fotos de platos (sobre kraft): La Clásica, La Ramona, Nachos, Tequeños, Fingers de pollo, La Puerca (DSC08550 integrada) en `frontend/public/images/`.
+- Fotos de platos (sobre kraft): La Clásica, La Ramona, Nachos, Tequeños, Fingers de pollo, La Puerca (DSC08550 integrada) en `frontend/public/images/`. El original `DSC08550.jpg` está fuera del repo, en `../kanalla-originales/`: en `public/` solo van versiones optimizadas.
 - Logo tinta en PNG y su vectorización por capas.
 - Imagen original de la tabla de alérgenos (`kanalla_carta_05_alergenos.jpg`) y sus datos (`frontend/src/data/alergenos.json`).
 - **No hay**: fotos de la terraza, reseñas o testimonios, premios, prensa, cifras de pedidos. No se inventan.

@@ -187,6 +187,7 @@ writeFileSync(OUT_SVG, svgFull);
 const { data: rgba } = await sharp(SRC).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
 const ART = { x: 140, y: 60, w: 748, h: 882 }; // lienzo útil (bbox de tinta + 4 px)
 const LAYER_SCALE = 0.3; // 2,5× nítido para el logo de la cabecera y el pie (≤ 105 px CSS de alto)
+const LOGO_GRANDE = [420, 748]; // anchos del logo completo para el hero (748 = tamaño original)
 const LAYER_DIR = resolve(root, 'public/images/logo-capas');
 mkdirSync(LAYER_DIR, { recursive: true });
 const layersMeta = {};
@@ -215,6 +216,18 @@ for (let li = 0; li < LAYERS.length; li++) {
   // AVIF (principal, ~35 % menos) + WebP de respaldo. Ambos conservan el grano del original.
   await layerImg.clone().avif({ quality: 60, effort: 6 }).toFile(resolve(LAYER_DIR, `${name}.avif`));
   await layerImg.clone().webp({ quality: 85, alphaQuality: 80, effort: 6 }).toFile(resolve(LAYER_DIR, `${name}.webp`));
+  // Tamaños grandes para el logo del hero (hasta ~560 px CSS de ancho): <capa>-<ancho del logo>.{avif,webp}
+  const grande = [];
+  for (const logoW of LOGO_GRANDE) {
+    const k = logoW / ART.w;
+    const w = Math.round(box.w * k);
+    const img = sharp(buf, { raw: { width: W, height: H, channels: 4 } })
+      .extract({ left: box.x, top: box.y, width: box.w, height: box.h })
+      .resize(w);
+    await img.clone().avif({ quality: 55, effort: 6 }).toFile(resolve(LAYER_DIR, `${name}-${logoW}.avif`));
+    await img.clone().webp({ quality: 82, alphaQuality: 80, effort: 6 }).toFile(resolve(LAYER_DIR, `${name}-${logoW}.webp`));
+    grande.push({ logoW, w });
+  }
   // posición relativa al lienzo útil, en %
   layersMeta[name] = {
     avif: `images/logo-capas/${name}.avif`,
@@ -223,6 +236,7 @@ for (let li = 0; li < LAYERS.length; li++) {
     top: +(((box.y - ART.y) / ART.h) * 100).toFixed(3),
     width: +((box.w / ART.w) * 100).toFixed(3),
     px: { w: Math.round(box.w * LAYER_SCALE), h: Math.round(box.h * LAYER_SCALE) },
+    grande,
   };
 }
 

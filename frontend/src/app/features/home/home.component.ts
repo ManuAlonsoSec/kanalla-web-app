@@ -124,11 +124,6 @@ export class HomeComponent {
     const win = this.doc.defaultView!;
     const behavior: ScrollBehavior = prefersReducedMotion(win) ? 'auto' : 'smooth';
 
-    if (href === '/' && a.matches('.site-header__logo')) {
-      e.preventDefault();
-      win.scrollTo({ top: 0, behavior });
-      return;
-    }
     if (!href.startsWith('#')) return;
     const id = ALIAS[href.slice(1)] ?? href.slice(1);
     if (id === 'alergenos') {

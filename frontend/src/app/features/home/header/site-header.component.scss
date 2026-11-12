@@ -1,4 +1,4 @@
-// Cabecera sobre el hero: logo · navegación · teléfono. No es fija: en móvil el
+// Cabecera sobre el hero: navegación · teléfono (el logo es la imagen del hero). No es fija: en móvil el
 // pedido lo lleva la barra inferior y en escritorio el ticket lateral.
 
 .site-header {
@@ -17,27 +17,11 @@
   text-transform: uppercase;
 }
 
-.site-header__logo {
-  flex: none;
-  display: block;
-  height: calc(var(--header-h) - 0.75rem);
-  aspect-ratio: 748 / 882;
-  -webkit-tap-highlight-color: transparent;
-
-  .logo {
-    width: 100%;
-    height: 100%;
-  }
-
-  &:focus-visible {
-    outline-offset: 4px;
-  }
-}
-
 .site-header__nav {
   display: flex;
   align-items: center;
-  margin-left: auto;
+  margin-right: auto;
+  margin-left: -0.15rem;
 
   a {
     display: inline-flex;
@@ -87,7 +71,7 @@
   }
 }
 
-// Móvil: logo · Carta · Combo · Reservas · teléfono corto
+// Móvil: Carta · Combo · Reservas
 @media (max-width: 899px) {
   .site-header {
     gap: 0.5rem;
