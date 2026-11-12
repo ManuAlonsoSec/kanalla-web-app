@@ -1,0 +1,38 @@
+{
+  "fuente": "Tabla de alérgenos Kanalla (kanalla_carta_05_alergenos), nov 2026",
+  "leyenda": { "X": "Contiene", "T": "Puede contener trazas", "sinGluten": { "Sí": "Sin gluten de base", "Opción": "Se puede pedir sin gluten", "No": "No disponible sin gluten" } },
+  "alergenos": ["gluten", "crustaceos", "huevo", "pescado", "cacahuetes", "soja", "lacteos", "frutos_secos", "apio", "mostaza", "sesamo", "sulfitos", "altramuces", "moluscos"],
+  "etiquetas": { "gluten": "Gluten", "crustaceos": "Crustáceos", "huevo": "Huevo", "pescado": "Pescado", "cacahuetes": "Cacahuetes", "soja": "Soja", "lacteos": "Lácteos", "frutos_secos": "Frutos secos", "apio": "Apio", "mostaza": "Mostaza", "sesamo": "Sésamo", "sulfitos": "Sulfitos", "altramuces": "Altramuces", "moluscos": "Moluscos" },
+  "secciones": [
+    { "seccion": "Entrantes", "platos": [
+      { "plato": "Croquetas", "sinGluten": "Opción", "contiene": ["gluten", "crustaceos", "huevo", "pescado", "lacteos"], "trazas": [] },
+      { "plato": "Tequeños de queso", "sinGluten": "Opción", "contiene": ["gluten", "huevo", "lacteos"], "trazas": ["crustaceos", "pescado"] },
+      { "plato": "Empanadas colombianas", "sinGluten": "Sí", "contiene": [], "trazas": [] },
+      { "plato": "Bravas", "sinGluten": "Sí", "contiene": ["mostaza", "sulfitos"], "trazas": [] },
+      { "plato": "Atelier", "sinGluten": "Sí", "contiene": ["lacteos"], "trazas": [] },
+      { "plato": "Pekado", "sinGluten": "Opción", "contiene": ["gluten", "huevo", "lacteos", "sulfitos"], "trazas": ["crustaceos", "pescado"] },
+      { "plato": "Fingers de pollo", "sinGluten": "Opción", "contiene": ["gluten", "huevo", "lacteos", "sulfitos"], "trazas": ["crustaceos", "pescado"] },
+      { "plato": "Menú infantil", "sinGluten": "No", "contiene": ["gluten"], "trazas": [] }
+    ] },
+    { "seccion": "Ensaladas", "platos": [
+      { "plato": "Ensalada Kanalla", "sinGluten": "Sí", "contiene": ["lacteos", "frutos_secos", "sulfitos"], "trazas": [] },
+      { "plato": "Ensalada César", "sinGluten": "Opción", "contiene": ["gluten", "huevo", "pescado", "lacteos", "mostaza"], "trazas": [] }
+    ] },
+    { "seccion": "Hamburguesas", "platos": [
+      { "plato": "La Kanalla", "sinGluten": "Opción", "contiene": ["gluten", "soja", "lacteos", "mostaza", "sulfitos"], "trazas": [] },
+      { "plato": "La Necesaria (vegetariana)", "sinGluten": "Opción", "contiene": ["gluten", "huevo", "soja", "lacteos"], "trazas": [] },
+      { "plato": "La Necesaria con pan sin gluten (vegana)", "sinGluten": "", "contiene": ["soja"], "trazas": [] },
+      { "plato": "La Sinvergüenza", "sinGluten": "Opción", "contiene": ["gluten", "lacteos", "sulfitos"], "trazas": [] },
+      { "plato": "La Bribona", "sinGluten": "Opción", "contiene": ["gluten", "huevo", "lacteos", "sesamo", "sulfitos"], "trazas": ["mostaza"] },
+      { "plato": "Ramona (Pechugona)", "sinGluten": "Opción", "contiene": ["gluten", "huevo", "lacteos"], "trazas": [] },
+      { "plato": "La Granuja", "sinGluten": "Opción", "contiene": ["gluten", "huevo", "lacteos"], "trazas": [] },
+      { "plato": "La Puerca", "sinGluten": "Opción", "contiene": ["gluten", "huevo", "lacteos"], "trazas": [] }
+    ] },
+    { "seccion": "Postres", "platos": [
+      { "plato": "Tarta de queso manchego", "sinGluten": "Sí", "contiene": ["huevo", "lacteos"], "trazas": [] },
+      { "plato": "Tarta de muerte por chocolate", "sinGluten": "—", "contiene": ["lacteos", "frutos_secos", "sulfitos"], "trazas": [] },
+      { "plato": "Coulant de chocolate", "sinGluten": "No", "contiene": ["gluten", "huevo", "lacteos", "frutos_secos"], "trazas": [] }
+    ] }
+  ],
+  "nota": "Hamburguesas sin gluten con pan sin gluten (+1 €). Burger del mes, extras y bebidas: pregunta al personal. Contamos con certificado de gestión de alérgenos; aun así, no podemos garantizar la ausencia total de trazas. Si tienes alguna alergia o intolerancia, avísanos al pedir."
+}

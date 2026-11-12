@@ -1,0 +1,113 @@
+// Cabecera sobre el hero: logo · navegación · teléfono. No es fija: en móvil el
+// pedido lo lleva la barra inferior y en escritorio el ticket lateral.
+
+.site-header {
+  position: absolute;
+  z-index: 10;
+  inset: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+  height: var(--header-h);
+  padding: calc(var(--safe-top) + 0.5rem) var(--gutter) 0;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.site-header__logo {
+  flex: none;
+  display: block;
+  height: calc(var(--header-h) - 0.75rem);
+  aspect-ratio: 748 / 882;
+  -webkit-tap-highlight-color: transparent;
+
+  .logo {
+    width: 100%;
+    height: 100%;
+  }
+
+  &:focus-visible {
+    outline-offset: 4px;
+  }
+}
+
+.site-header__nav {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-inline: 0.15rem;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.45em;
+    transition: text-decoration-color var(--t-ui) var(--ease-out);
+
+    @media (hover: hover) {
+      &:hover {
+        text-decoration-color: currentColor;
+      }
+    }
+  }
+}
+
+.site-header__sep {
+  padding-inline: 0.45em;
+}
+
+.site-header__tel {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: 0.85rem;
+  border: 2px solid var(--kraft-ink);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  transition:
+    background-color var(--t-ui) var(--ease-out),
+    color var(--t-ui) var(--ease-out),
+    transform var(--t-press) var(--ease-out);
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--carta-bottom);
+      background-color: var(--kraft-ink);
+    }
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+// Móvil: logo · Carta · Combo · Reservas · teléfono corto
+@media (max-width: 899px) {
+  .site-header {
+    gap: 0.5rem;
+  }
+
+  .site-header .site-header__ancho {
+    display: none;
+  }
+
+  .site-header__nav {
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+  }
+
+  .site-header__sep {
+    padding-inline: 0.25em;
+  }
+
+  .site-header__tel {
+    display: none;
+  }
+}
+

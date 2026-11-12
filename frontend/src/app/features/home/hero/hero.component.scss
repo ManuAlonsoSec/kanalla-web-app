@@ -1,0 +1,376 @@
+// ── Hero cartel ───────────────────────────────────────────────────────────────
+// Una rejilla; el titular (h1) la hereda con subgrid para repartir sus líneas
+// alrededor de la foto sin sacarlas del encabezado.
+//   móvil:      SI ESTÁS / AQUÍ, / foto / cinta / KANALLA. / talón / hoy
+//   escritorio: titular a la izquierda, foto arriba a la derecha, KANALLA. a sangre abajo
+// Nada se anima: el titular y la foto están desde el primer pintado.
+
+.hero {
+  --l: clamp(3.5rem, 24.5vw, 7.5rem); // tamaño de línea del titular (móvil)
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: repeat(7, auto);
+  padding: calc(var(--header-h) + 0.75rem) var(--gutter) 2.25rem;
+  overflow: clip;
+  background-image: var(--carta-gradient-light);
+}
+
+// ── Titular ─────────────────────────────────────────────────────────────────
+.hero__titulo {
+  position: relative;
+  z-index: 2;
+  grid-column: 1 / -1;
+  grid-row: 1 / 6;
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-template-rows: subgrid;
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.hero__l {
+  display: block;
+  font-size: var(--l);
+  line-height: 0.86;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+
+.hero__l1 {
+  grid-row: 1;
+  margin-left: -0.035em;
+}
+
+// La tilde de AQUÍ necesita aire sobre SI ESTÁS
+.hero__l2 {
+  grid-row: 2;
+  justify-self: end;
+  margin-top: 0.1em;
+  margin-right: 4vw;
+}
+
+.hero__l3 {
+  grid-row: 5;
+  justify-self: end;
+  margin-top: 0.06em;
+  margin-right: -0.04em;
+}
+
+// «ya eres un poco»: cinta de tinta pegada en diagonal
+.hero__cinta {
+  grid-row: 4;
+  justify-self: start;
+  align-self: start;
+  margin-top: 0.75rem;
+  padding: 0.5em 0.9em 0.45em;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: clamp(0.9375rem, 1.45vw, 1.375rem);
+  line-height: 1.1;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+  color: var(--carta-bottom);
+  background-color: var(--kraft-ink);
+  rotate: -2.5deg;
+}
+
+// ── La Puerca, recortada a tijera y «impresa» sobre el kraft ─────────────────
+// Columna explícita: el h1 ocupa las filas 1–5 y la colocación automática la
+// mandaría a una columna implícita.
+.hero__foto {
+  grid-column: 1;
+  grid-row: 3;
+  justify-self: end;
+  width: 94%;
+  margin: 0.75rem calc(var(--gutter) * -0.5) 0 0;
+}
+
+.hero__recorte {
+  display: block;
+  mix-blend-mode: multiply; // como una fotocopia pegada en el papel
+  rotate: 2.5deg;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+}
+
+.hero__pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.hero__plato {
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 1.1rem + 0.6vw, 1.625rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.hero__punto {
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 1.1rem + 0.6vw, 1.625rem);
+  line-height: 1;
+}
+
+.hero__precio {
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 1.1875rem;
+  color: var(--kraft-copper);
+  font-variant-numeric: tabular-nums;
+}
+
+.hero__mas {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  margin-left: 0.15rem;
+  padding: 0 0.75rem;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--kraft-ink);
+  border: 2px solid var(--kraft-ink);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--t-ui) var(--ease-out),
+    color var(--t-ui) var(--ease-out),
+    transform var(--t-press) var(--ease-out);
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--carta-bottom);
+      background-color: var(--kraft-ink);
+    }
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.hero__llevas {
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+// ── Pide directo: talón de tinta (gesto de firma nº 1) ────────────────────────
+.hero__pide {
+  position: relative;
+  z-index: 3;
+  grid-column: 1;
+  grid-row: 6;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1.25rem;
+  margin-top: 1.25rem;
+}
+
+.talon {
+  display: inline-block;
+  color: var(--carta-bottom);
+  rotate: -3deg;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--t-ui) var(--ease-out);
+
+  &:focus-visible {
+    outline-color: var(--kraft-ink);
+    outline-offset: 5px;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-3px);
+    }
+  }
+
+  &:active {
+    transform: scale(0.97);
+    transition-duration: var(--t-press);
+  }
+}
+
+// El papel del talón (tinta) con dientes arriba y abajo; la línea de puntos es el
+// troquel. La máscara va aquí y no en el enlace para no recortar el anillo de foco.
+.talon__papel {
+  --diente: 7px;
+  display: grid;
+  gap: 0.2rem;
+  padding: calc(0.75rem + var(--diente)) 1.35rem calc(0.7rem + var(--diente));
+  background:
+    linear-gradient(90deg, var(--carta-bottom) 50%, transparent 0) left calc(var(--diente) + 0.35rem) / 10px 1.5px
+      repeat-x,
+    var(--kraft-ink);
+  -webkit-mask:
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--diente) * 2)
+      var(--diente) repeat-x,
+    linear-gradient(#000 0 0) center / 100% calc(100% - var(--diente) * 2) no-repeat,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--diente) * 2)
+      var(--diente) repeat-x;
+  mask:
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--diente) * 2)
+      var(--diente) repeat-x,
+    linear-gradient(#000 0 0) center / 100% calc(100% - var(--diente) * 2) no-repeat,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--diente) * 2)
+      var(--diente) repeat-x;
+}
+
+.talon__k {
+  margin-top: 0.35rem;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.talon__t {
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 2.3vw, 2.375rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hero__llama {
+  display: inline-block;
+  padding-block: 0.75rem;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.35em;
+}
+
+// ── El dato de hoy y las zonas ────────────────────────────────────────────────
+.hero__dia {
+  position: relative;
+  z-index: 3;
+  grid-column: 1;
+  grid-row: 7;
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+
+  dt {
+    font-family: var(--font-kicker);
+    font-weight: 700;
+    font-size: 0.75rem;
+    line-height: 1.3;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  dd {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.2;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+}
+
+// Hueco reservado: el horario de hoy se escribe en el navegador
+.hero__hoy dd {
+  min-height: 1.2em;
+}
+
+// ── Escritorio ───────────────────────────────────────────────────────────────
+@media (min-width: 900px) {
+  .hero {
+    --l: clamp(5rem, min(13.2vw, 20.5svh), 14rem);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: repeat(5, auto);
+    column-gap: clamp(12px, 1.5vw, 24px);
+    padding-top: calc(var(--header-h) + 1rem);
+    padding-bottom: 0;
+  }
+
+  .hero__titulo {
+    grid-row: 1 / 6;
+  }
+
+  .hero__l1 {
+    grid-column: 1 / 8;
+  }
+
+  .hero__l2 {
+    grid-column: 2 / 8;
+    justify-self: start;
+    margin-right: 0;
+    margin-left: 0.5em;
+  }
+
+  .hero__cinta {
+    grid-column: 2 / 8;
+    grid-row: 3;
+    margin-top: 0.9rem;
+    margin-left: 1.1em;
+  }
+
+  .hero__l3 {
+    grid-column: 1 / -1;
+    font-size: calc(var(--l) * 1.4);
+    line-height: 0.8;
+    margin-bottom: -0.07em; // a sangre por abajo
+  }
+
+  .hero__foto {
+    grid-column: 7 / 13;
+    grid-row: 1 / 5;
+    align-self: start;
+    justify-self: stretch;
+    width: auto;
+    margin: 0 calc(var(--gutter) * -0.5) 0 0;
+  }
+
+  .hero__pie {
+    margin-top: 0.75rem;
+  }
+
+  .hero__pide {
+    grid-column: 1 / 5;
+    grid-row: 4;
+    align-self: start;
+    margin-top: 1.75rem;
+  }
+
+  // A la izquierda de KANALLA. (que va alineado a la derecha)
+  .hero__dia {
+    grid-column: 1 / 4;
+    grid-row: 5;
+    align-self: start;
+    margin-top: 1.5rem;
+  }
+}
