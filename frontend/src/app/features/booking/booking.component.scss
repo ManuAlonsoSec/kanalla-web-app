@@ -21,6 +21,7 @@
   text-transform: uppercase;
 
   a {
+    padding-block: 0.7rem; // enlace dentro de una frase: más área para el dedo sin mover el texto
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }
@@ -140,6 +141,7 @@ select.field__input {
     }
 
     a {
+      padding-block: 0.7rem; // enlace dentro de una frase: más área para el dedo sin mover el texto
       text-decoration: underline;
       text-underline-offset: 0.2em;
       white-space: nowrap;
@@ -183,6 +185,7 @@ select.field__input {
 }
 
 .booking__consent-link {
+  padding-block: 0.7rem; // más área para el dedo sin mover el texto
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }

@@ -60,6 +60,7 @@
   background-color: var(--kraft-ink);
 
   a {
+    padding-block: 0.7rem; // enlace dentro de una frase: más área para el dedo sin mover el texto
     text-decoration: underline;
     text-decoration-thickness: 2px;
     text-underline-offset: 0.2em;
@@ -148,6 +149,7 @@
   text-align: center;
 
   a {
+    padding-block: 0.7rem; // enlace dentro de una frase: más área para el dedo sin mover el texto
     text-decoration: underline;
     text-underline-offset: 0.2em;
   }
