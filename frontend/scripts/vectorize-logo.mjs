@@ -5,7 +5,7 @@
 //
 // Entrada : public/images/logo-kanalla-burger-tinta.png (1024×1024, alfa)
 // Salida  : src/app/features/home/logo/logo-paths.ts   (paths por capa)
-//           public/images/logo-kanalla-burger-tinta.svg (SVG estático completo)
+//           ../kanalla-originales/logo-kanalla-burger-tinta.svg (SVG estático completo; la web no lo usa)
 //           scripts/out/logo-overlay.png                (comparación visual)
 //
 // No redibuja nada: cada capa es la tinta original del PNG, separada por
@@ -17,11 +17,12 @@ import potrace from 'potrace';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ORIGINALES } from './originales.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const SRC = resolve(root, 'public/images/logo-kanalla-burger-tinta.png');
 const OUT_TS = resolve(root, 'src/app/features/home/logo/logo-paths.ts');
-const OUT_SVG = resolve(root, 'public/images/logo-kanalla-burger-tinta.svg');
+const OUT_SVG = resolve(ORIGINALES, 'logo-kanalla-burger-tinta.svg'); // la web no lo usa: fuera de public/
 const OUT_DIR = resolve(root, 'scripts/out');
 const INK = '#492310';
 const UP = 2; // factor de escalado antes de trazar

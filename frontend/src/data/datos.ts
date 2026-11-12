@@ -51,7 +51,16 @@ export interface FilaAlergenos {
 
 export const CARTA = cartaJson.secciones as SeccionCarta[];
 export const COMBO = cartaJson.combo as Combo;
-export const LOCAL = localJson as typeof localJson & { pedidoMinimo: string | null; gastosEnvio: string | null };
+/** Pedido mínimo de un grupo de zonas de reparto. */
+export interface PedidoMinimo {
+  zonas: string[];
+  importe: string;
+}
+
+export const LOCAL = localJson as Omit<typeof localJson, 'pedidoMinimo' | 'gastosEnvio'> & {
+  pedidoMinimo: PedidoMinimo[] | null;
+  gastosEnvio: string | null;
+};
 
 /** Todos los platos de la carta por id. */
 export const PLATOS: ReadonlyMap<string, Plato> = new Map(CARTA.flatMap((s) => s.platos.map((p) => [p.id, p] as const)));

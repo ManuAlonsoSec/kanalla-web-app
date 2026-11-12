@@ -42,7 +42,7 @@ Web de una sola página de Kanalla Skybar, gastrobar con terraza rooftop y burge
 - SEO: JSON-LD `Restaurant` (telephone, areaServed, hasMenu), Open Graph, sitemap y robots.
 - Sin analítica (no había).
 - Horario de reparto = horario del local (confirmado por el dueño).
-- **TODO:** pedido mínimo y gastos de envío. Se rellenan en `local.json` (`pedidoMinimo`, `gastosEnvio`); mientras sean `null` no se muestran y el ticket dice que se confirman por WhatsApp.
+- **Pedido mínimo y envío (confirmados por el dueño el 12-11-2026):** mínimo de 20 € en Galapagar, 30 € en Colmenarejo y 40 € en Collado Villalba y Torrelodones; envío, 2 €. Están en `local.json` (`pedidoMinimo`, `gastosEnvio`) y se muestran en el ticket; el envío va aparte del total orientativo.
 
 ## Brand Commitments
 
@@ -65,9 +65,9 @@ Vinculantes (del brief y del dueño):
 
 ## Evidence on Hand
 
-- Fotos de platos (sobre kraft): La Clásica, La Ramona, Nachos, Tequeños, Fingers de pollo, La Puerca (DSC08550 integrada) en `frontend/public/images/`. El original `DSC08550.jpg` está fuera del repo, en `../kanalla-originales/`: en `public/` solo van versiones optimizadas.
+- Fotos de platos (sobre kraft): La Clásica, La Ramona, Nachos, Tequeños, Fingers de pollo y La Puerca (DSC08550 integrada). En `frontend/public/images/` solo están las versiones optimizadas; los originales viven fuera del repo, en `../kanalla-originales/`.
 - Logo tinta en PNG y su vectorización por capas.
-- Imagen original de la tabla de alérgenos (`kanalla_carta_05_alergenos.jpg`) y sus datos (`frontend/src/data/alergenos.json`).
+- Tabla de alérgenos: la imagen descargable optimizada (`tabla-alergenos-kanalla.jpg`, con copias AVIF y WebP) y sus datos (`frontend/src/data/alergenos.json`). El original (`kanalla_carta_05_alergenos.jpg`) y el resto de páginas de la carta impresa están en `../kanalla-originales/`.
 - **No hay**: fotos de la terraza, reseñas o testimonios, premios, prensa, cifras de pedidos. No se inventan.
 
 ## Product Principles

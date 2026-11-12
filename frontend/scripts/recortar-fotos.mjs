@@ -6,12 +6,14 @@
 // El corte de papel va dentro de la imagen (canal alfa), no en un clip-path de CSS:
 // recorte-<plato>-<ancho>.{avif,webp}. El borde es el del papel cortado, no el
 // contorno de la comida (eso no se aproxima con polígonos).
-// Parte de los mismos originales que optimize-images.mjs, que NO se tocan.
+// Parte de los mismos originales que optimize-images.mjs (fuera del repo: ver
+// scripts/originales.mjs), que NO se tocan.
 // ──────────────────────────────────────────────────────────────────────────────
 import sharp from 'sharp';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFileSync } from 'node:fs';
+import { original } from './originales.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const IMG = resolve(root, 'public/images');
@@ -37,7 +39,7 @@ const RECORTES = { 'la-puerca': 'ancha', 'la-clasica': 'a', 'la-ramona': 'b', na
 
 for (const [slug, corte] of Object.entries(RECORTES)) {
   const f = fotos[slug];
-  const src = resolve(IMG, f.original);
+  const src = original(f.original);
   for (const w of f.widths) {
     const h = Math.round((w * f.height) / f.width);
     const puntos = TIJERA[corte].map(([x, y]) => `${((x / 100) * w).toFixed(1)},${((y / 100) * h).toFixed(1)}`).join(' ');

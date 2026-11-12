@@ -4,9 +4,9 @@
 //   swift scripts/vision-mask.swift ../../kanalla-originales/DSC08550.jpg scripts/out/DSC08550-mask.png
 //   node scripts/integrar-foto.mjs
 //
-// El original (13 MB) vive FUERA del repo, en ../kanalla-originales/ (junto a la carpeta
-// del proyecto), o donde diga la variable KANALLA_ORIGINALES. En public/ solo van las
-// versiones optimizadas.
+// Tanto el original (13 MB) como el máster que sale de aquí (la-puerca-kraft.jpg) viven
+// FUERA del repo (ver scripts/originales.mjs). En public/ solo van las versiones
+// optimizadas, que genera después optimize-images.mjs.
 //
 // · Separa la burger del fondo con la máscara de Vision (macOS, en local).
 // · Quita el reflejo verde de las plantas en los bordes (despill).
@@ -17,12 +17,12 @@
 import sharp from 'sharp';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ORIGINALES, original } from './originales.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const ORIGINALES = process.env.KANALLA_ORIGINALES ?? resolve(root, '../../kanalla-originales');
-const SRC = resolve(ORIGINALES, 'DSC08550.jpg');
+const SRC = original('DSC08550.jpg');
 const MASK = resolve(root, 'scripts/out/DSC08550-mask.png');
-const OUT = resolve(root, 'public/images/la-puerca-kraft.jpg');
+const OUT = resolve(ORIGINALES, 'la-puerca-kraft.jpg');
 
 const SCALE = 0.5; // master de 2400 px de ancho: de sobra para los 1200 px que se sirven
 const meta = await sharp(SRC).metadata();

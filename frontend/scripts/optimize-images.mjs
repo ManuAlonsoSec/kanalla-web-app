@@ -1,19 +1,22 @@
 // ──────────────────────────────────────────────────────────────────────────────
-// optimize-images.mjs — Versiones optimizadas de las fotos (junto a los originales)
+// optimize-images.mjs — Versiones optimizadas de las fotos
 //
 //   node scripts/optimize-images.mjs
 //
 // · Fotos de platos → foto-<plato>-<ancho>.{avif,webp} + .jpg de respaldo
 // · og-kanalla.jpg (1200×630) para Open Graph
 // · favicon-48.png, favicon-32.png y apple-touch-icon.png a partir del logo
+// · tabla-alergenos-kanalla.{avif,webp,jpg} a partir de la página 5 de la carta impresa
 //
-// Los originales NO se mueven ni se renombran. Los derivados usan nombres sin
-// espacios ni eñes para que las URLs sean limpias.
+// Los originales se leen de fuera del repo (ver scripts/originales.mjs) y no se
+// modifican. En public/ solo se escriben los derivados, con nombres sin espacios ni
+// eñes para que las URLs sean limpias.
 // ──────────────────────────────────────────────────────────────────────────────
 import sharp from 'sharp';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { writeFileSync } from 'node:fs';
+import { original } from './originales.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const IMG = resolve(root, 'public/images');
@@ -35,7 +38,7 @@ const WIDTHS_ANCHAS = [480, 720, 960, 1200];
 
 const manifest = {};
 for (const [file, slug] of Object.entries(FOTOS)) {
-  const src = sharp(resolve(IMG, file));
+  const src = sharp(original(file));
   const { width, height } = await src.metadata();
   const base = width / height > 1.2 ? WIDTHS_ANCHAS : WIDTHS;
   const widths = base.map((w) => Math.min(w, width)).filter((w, i, a) => a.indexOf(w) === i);
@@ -61,7 +64,7 @@ writeFileSync(
   );
   const photoH = 630;
   const photoW = Math.round((912 / 1152) * photoH);
-  const photo = await sharp(resolve(IMG, 'laclasicaedit.png')).resize(photoW, photoH).png().toBuffer();
+  const photo = await sharp(original('laclasicaedit.png')).resize(photoW, photoH).png().toBuffer();
   // borde difuminado para que el kraft de la foto se funda con el fondo
   const mask = Buffer.from(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${photoW}" height="${photoH}"><defs><radialGradient id="m" cx=".5" cy=".55" r=".55"><stop offset=".62" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><rect width="100%" height="100%" fill="url(#m)"/></svg>`,
@@ -100,4 +103,17 @@ writeFileSync(
   await (await icon(48, 0.04)).toFile(resolve(PUB, 'favicon-48.png'));
   await (await icon(180, 0.1)).toFile(resolve(PUB, 'apple-touch-icon.png'));
   console.log('favicon-32.png, favicon-48.png, apple-touch-icon.png');
+}
+
+// ── Tabla de alérgenos original (página 5 de la carta impresa) ───────────────
+// La web muestra la tabla en HTML; esto es la imagen que se puede descargar.
+// Mismo tamaño que el original (texto pequeño: no se reduce) y sin submuestreo de
+// color en el JPG para que las letras no se emborronen.
+{
+  const src = sharp(original('kanalla_carta_05_alergenos.jpg'));
+  const base = resolve(IMG, 'tabla-alergenos-kanalla');
+  await src.clone().avif({ quality: 50, effort: 6, chromaSubsampling: '4:4:4' }).toFile(`${base}.avif`);
+  await src.clone().webp({ quality: 74, effort: 6 }).toFile(`${base}.webp`);
+  await src.clone().jpeg({ quality: 68, mozjpeg: true, chromaSubsampling: '4:4:4' }).toFile(`${base}.jpg`);
+  console.log('tabla-alergenos-kanalla.{avif,webp,jpg}');
 }

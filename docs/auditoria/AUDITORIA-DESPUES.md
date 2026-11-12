@@ -95,6 +95,6 @@ Todas las curvas son ease-out fuertes: `cubic-bezier(.23, 1, .32, 1)`, o la de c
 
 ## Pendiente
 
-- **TODO:** pedido mínimo y gastos de envío (`local.json`).
+- **Pedido mínimo y envío:** resueltos el 12 nov (20 / 30 / 40 € según zona; envío 2 €). Se ven en el ticket.
 - **Hamburguesa del mes:** se apunta «a consultar», sin precio.
 - **Supabase en local:** sin `.env.local` no se puede probar el formulario de principio a fin.

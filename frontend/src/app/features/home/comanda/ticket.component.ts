@@ -76,11 +76,26 @@ import { ComandaService } from './comanda.service';
       }
 
       <div class="ticket__notas">
-        @if (local.pedidoMinimo) {
-          <p class="ticket__nota">Pedido mínimo: {{ local.pedidoMinimo }}</p>
-        }
-        @if (local.gastosEnvio) {
-          <p class="ticket__nota">Envío: {{ local.gastosEnvio }}</p>
+        @if (local.pedidoMinimo?.length || local.gastosEnvio) {
+          <div class="ticket__reparto">
+            @if (local.pedidoMinimo?.length) {
+              <p class="ticket__reparto-cab" [id]="'ticket-' + variante() + '-minimo'">Pedido mínimo</p>
+              <dl [attr.aria-labelledby]="'ticket-' + variante() + '-minimo'">
+                @for (m of local.pedidoMinimo; track m.importe) {
+                  <div class="ticket__tramo">
+                    <dt>{{ m.zonas.join(' y ') }}</dt>
+                    <dd>{{ m.importe }}</dd>
+                  </div>
+                }
+              </dl>
+            }
+            @if (local.gastosEnvio) {
+              <p class="ticket__tramo ticket__tramo--envio">
+                <span>Envío, aparte del total</span>
+                <span class="ticket__importe">{{ local.gastosEnvio }}</span>
+              </p>
+            }
+          </div>
         }
         <p class="ticket__nota">Precio orientativo. Te confirmamos total y hora de entrega por WhatsApp.</p>
         <p class="ticket__nota ticket__nota--fuerte">¿Alergias? Avísanos en el mensaje.</p>

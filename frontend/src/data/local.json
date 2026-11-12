@@ -1,5 +1,5 @@
 {
-  "_ayuda": "Datos del local. Se usan en la web, el footer y el JSON-LD (SEO). El horario de reservas del formulario sale de la tabla restaurant_schedule de Supabase, no de aquí. pedidoMinimo y gastosEnvio: texto tal cual se muestra en la comanda (p. ej. «15,00€») o null mientras no estén confirmados (entonces no se muestran). El horario de reparto es el mismo que el del local.",
+  "_ayuda": "Datos del local. Se usan en la web, el footer y el JSON-LD (SEO). El horario de reservas del formulario sale de la tabla restaurant_schedule de Supabase, no de aquí. pedidoMinimo: lista de tramos {zonas, importe} con el pedido mínimo de cada zona de reparto (confirmado por el dueño el 12-11-2026); gastosEnvio: texto tal cual se muestra en la comanda. Si alguno es null (o la lista está vacía), no se muestra. El horario de reparto es el mismo que el del local.",
   "nombre": "Kanalla Skybar",
   "url": "https://kanallaskybar.es",
   "telefono": {
@@ -30,9 +30,21 @@
     "Collado Villalba",
     "Torrelodones"
   ],
-  "pedidoMinimo": null,
-  "gastosEnvio": null,
-  "_todo": "TODO: confirmar con el dueño el pedido mínimo y los gastos de envío y rellenar pedidoMinimo / gastosEnvio.",
+  "pedidoMinimo": [
+    {
+      "zonas": ["Galapagar"],
+      "importe": "20,00€"
+    },
+    {
+      "zonas": ["Colmenarejo"],
+      "importe": "30,00€"
+    },
+    {
+      "zonas": ["Collado Villalba", "Torrelodones"],
+      "importe": "40,00€"
+    }
+  ],
+  "gastosEnvio": "2,00€",
   "horario": [
     {
       "dias": "Lunes",

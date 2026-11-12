@@ -21,7 +21,7 @@ Hay que usar `npm run build`, no `ng build` a secas: el paso `hidratar-despues.m
 - **Fotos:**
   - `node scripts/optimize-images.mjs` genera las versiones optimizadas.
   - `node scripts/recortar-fotos.mjs` genera los recortes a tijera.
-  - Los originales no se tocan. En `public/` solo van versiones optimizadas: el original de La Puerca (`DSC08550.jpg`, 13 MB) está fuera del repo, en `../kanalla-originales/`, y `scripts/integrar-foto.mjs` lo lee de ahí (o de `KANALLA_ORIGINALES`).
+  - Los originales no se tocan y viven **fuera del repo**, en `../kanalla-originales/` (o donde diga `KANALLA_ORIGINALES`; ver `scripts/originales.mjs`). En `public/` solo van las versiones optimizadas que la web usa. Sin esa carpeta la web compila igual: solo hace falta para regenerar fotos. No está en git, así que conviene tener copia.
   - `node scripts/vectorize-logo.mjs` genera las capas del logo: pequeñas para el pie y grandes (`-420`, `-748`) para el hero.
 - **`docs/`:** solo se suben los `.md`. Capturas, maquetas y salidas del detector se quedan en local.
 
