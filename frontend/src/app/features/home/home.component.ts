@@ -72,6 +72,13 @@ export class HomeComponent {
   private readonly heroIn = signal(true);
   /** Escritorio: el ticket lateral está a la vista. */
   protected readonly railVisible = signal(false);
+  /** El bloque de reservas está a la vista. */
+  private readonly reservasIn = signal(false);
+  /**
+   * Escritorio: la pestaña fija de la comanda sobra cuando ya se ve el ticket lateral,
+   * y estorba en el bloque de reservas (pisaba el botón «Confirmar reserva»).
+   */
+  protected readonly sinPestana = computed(() => this.railVisible() || this.reservasIn());
   /** Barra de pedido (móvil): fuera del hero, o en cuanto hay algo apuntado. */
   protected readonly barShown = computed(() => !this.heroIn() || this.comanda.unidades() > 0);
   /** Carga el formulario ya: vuelta del login, /reservas… */
@@ -145,7 +152,8 @@ export class HomeComponent {
 
   /**
    * · Barra de pedido: fuera del hero (o con comanda).
-   * · Pestaña de la comanda en escritorio: cuando el ticket lateral no se ve.
+   * · Pestaña de la comanda en escritorio: cuando no se ve ni el ticket lateral ni el
+   *   bloque de reservas.
    * · URL: `/reservas` mientras se ve el formulario y `/` en el hero. Así el login de
    *   Google vuelve a la misma URL desde la que se envió.
    */
@@ -160,10 +168,12 @@ export class HomeComponent {
       for (const e of entries) {
         if (e.target === hero) this.heroIn.set(e.isIntersecting);
         if (e.target === rail) this.railVisible.set(e.isIntersecting);
+        if (e.target === reservas) this.reservasIn.set(e.isIntersecting);
       }
     });
     visible.observe(hero);
     visible.observe(rail);
+    visible.observe(reservas);
 
     const url = new IntersectionObserver(
       (entries) => {

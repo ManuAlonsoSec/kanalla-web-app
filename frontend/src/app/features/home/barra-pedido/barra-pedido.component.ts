@@ -72,7 +72,7 @@ const RAIL = '(min-width: 1100px)';
 export class BarraPedidoComponent {
   /** Móvil: fuera del hero, o si ya hay comanda. */
   readonly shown = input(false);
-  /** Escritorio: el ticket lateral está a la vista. */
+  /** Escritorio: se ve el ticket lateral o el bloque de reservas, así que la pestaña sobra. */
   readonly railVisible = input(false);
 
   protected readonly comanda = inject(ComandaService);
