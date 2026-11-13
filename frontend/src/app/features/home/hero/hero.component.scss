@@ -1,0 +1,277 @@
+// ── Hero cartel: el logo es la imagen ─────────────────────────────────────────
+// Logo grande a un lado y titular en Anton a sangre al otro. En móvil, el logo
+// arriba y el titular debajo. Nada se anima salvo las llamas del logo.
+//
+// Composición elegida (.hero--a): logo a la izquierda (5/12) y titular en dos líneas
+// a sangre por la derecha. La variante descartada (logo a la derecha y titular en una
+// línea) está en docs/direcciones/hero-logo/.
+
+.hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: calc(var(--header-h) + 0.25rem) var(--gutter) 1.75rem;
+  overflow: clip;
+  background-image: var(--carta-gradient-light);
+}
+
+.hero__logo {
+  width: var(--logo-w);
+  // La tinta del logo se «imprime» sobre el kraft
+  mix-blend-mode: multiply;
+
+  .logo {
+    width: 100%;
+  }
+}
+
+.hero__cab {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+// Cobre: solo a 19 px en negrita o más (texto grande, 3,2:1 sobre kraft-200)
+.hero__kicker {
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: clamp(1.1875rem, 0.6rem + 1.1vw, 1.5rem);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  word-spacing: -0.04em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  color: var(--kraft-copper);
+}
+
+.hero__titulo {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--l);
+  line-height: 0.88;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+}
+
+.hero__l {
+  display: block;
+  white-space: nowrap;
+}
+
+// ── Pide directo: talón de tinta (gesto de firma nº 1) ────────────────────────
+.hero__pide {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1.25rem;
+  margin-top: 1rem;
+}
+
+.talon {
+  display: inline-block;
+  color: var(--carta-bottom);
+  rotate: -3deg;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform var(--t-ui) var(--ease-out);
+
+  &:focus-visible {
+    outline-color: var(--kraft-ink);
+    outline-offset: 5px;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-3px);
+    }
+  }
+
+  &:active {
+    transform: scale(0.97);
+    transition-duration: var(--t-press);
+  }
+}
+
+// El papel del talón (tinta) con dientes arriba y abajo; la línea de puntos es el
+// troquel. La máscara va aquí y no en el enlace para no recortar el anillo de foco.
+.talon__papel {
+  --diente: 7px;
+  display: grid;
+  gap: 0.2rem;
+  padding: calc(0.75rem + var(--diente)) 1.35rem calc(0.7rem + var(--diente));
+  background:
+    linear-gradient(90deg, var(--carta-bottom) 50%, transparent 0) left calc(var(--diente) + 0.35rem) / 10px 1.5px
+      repeat-x,
+    var(--kraft-ink);
+  -webkit-mask:
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--diente) * 2)
+      var(--diente) repeat-x,
+    linear-gradient(#000 0 0) center / 100% calc(100% - var(--diente) * 2) no-repeat,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--diente) * 2)
+      var(--diente) repeat-x;
+  mask:
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg) top / calc(var(--diente) * 2)
+      var(--diente) repeat-x,
+    linear-gradient(#000 0 0) center / 100% calc(100% - var(--diente) * 2) no-repeat,
+    conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--diente) * 2)
+      var(--diente) repeat-x;
+}
+
+.talon__k {
+  margin-top: 0.35rem;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.talon__t {
+  font-family: var(--font-display);
+  font-size: clamp(1.625rem, 2.3vw, 2.375rem);
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hero__llama {
+  display: inline-block;
+  padding-block: 0.75rem;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.35em;
+}
+
+// ── El dato de hoy y las zonas ────────────────────────────────────────────────
+.hero__dia {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+
+  dt {
+    font-family: var(--font-kicker);
+    font-weight: 700;
+    font-size: 0.75rem;
+    line-height: 1.3;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  dd {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.2;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+}
+
+// Hueco reservado: el horario de hoy se escribe en el navegador
+.hero__hoy dd {
+  min-height: 1.2em;
+}
+
+
+// Pantallas muy estrechas: el kicker cabe en una línea apretando los espacios
+@media (max-width: 384px) {
+  .hero__kicker {
+    letter-spacing: 0;
+    word-spacing: -0.16em;
+  }
+}
+
+// ── Móvil: logo arriba a la izquierda, titular pegado al borde derecho ────────
+.hero--a {
+  --logo-w: min(52vw, 16rem);
+  --l: clamp(4rem, 27.4vw, 9rem);
+
+  .hero__logo {
+    margin-left: -1vw;
+    rotate: -3deg;
+  }
+
+  .hero__titulo {
+    justify-self: end;
+    text-align: right;
+    margin-right: calc(var(--gutter) * -1 + 0.04em); // a sangre por la derecha
+  }
+}
+
+// ── Escritorio ───────────────────────────────────────────────────────────────
+@media (min-width: 900px) {
+  .hero {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(12px, 1.5vw, 24px);
+    padding-top: calc(var(--header-h) + 1rem);
+  }
+
+  // Logo 5/12 a la izquierda; a la derecha, titular en dos líneas a sangre
+  .hero--a {
+    --logo-w: min(100%, 60svh);
+    --l: clamp(6rem, min(16.6vw, 27svh), 19rem);
+    grid-template-rows: auto auto 1fr;
+    padding-bottom: clamp(2rem, 4vw, 3.5rem);
+
+    .hero__logo {
+      grid-column: 1 / 6;
+      grid-row: 1 / 4;
+      align-self: center;
+      justify-self: center;
+      margin-left: 0;
+    }
+
+    .hero__cab {
+      grid-column: 6 / -1;
+      grid-row: 1;
+      justify-items: end;
+      margin-top: 0;
+    }
+
+    .hero__pide {
+      grid-column: 6 / 10;
+      grid-row: 2;
+      justify-self: end;
+      align-self: start;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .hero__dia {
+      grid-column: 10 / -1;
+      grid-row: 2;
+      align-self: start;
+      margin-top: 1.75rem;
+    }
+  }
+}
+
+// Escritorio estrecho: el talón no cabe junto al logo sin pisarlo. Va alineado con la
+// columna del titular y el dato de hoy pasa debajo, en dos columnas.
+@media (min-width: 900px) and (max-width: 1239px) {
+  .hero--a {
+    .hero__pide {
+      grid-column: 6 / -1;
+      justify-self: start;
+      margin-left: 1.5rem;
+    }
+
+    .hero__dia {
+      grid-column: 6 / -1;
+      grid-row: 3;
+      grid-template-columns: auto minmax(0, 1fr);
+      column-gap: 2rem;
+      margin: 0.75rem 0 0 1.5rem;
+    }
+  }
+}

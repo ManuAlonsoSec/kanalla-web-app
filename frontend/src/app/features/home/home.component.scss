@@ -1,348 +1,185 @@
+// Página: hero cartel → comanda (combo + carta | ticket) → manifiesto →
+// terraza y reservas → pie. Cada bloque con su altura y su composición.
+
 .home {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding-bottom: 1.5rem;
+  display: block;
 }
 
-/* ── Hero ── */
-.hero {
-  padding: 1.5rem 1rem 0;
+.home__main {
+  outline: none;
+}
 
-  &__image-wrapper {
-    position: relative;
-    height: 400px;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    border: 1px solid var(--color-border);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+// ── La comanda ────────────────────────────────────────────────────────────────
+.pedir {
+  display: block;
+}
+
+.pedir__main {
+  min-width: 0;
+}
+
+.pedir__rail {
+  display: none;
+  outline: none;
+}
+
+// Escritorio: ticket fijo en el lateral mientras se recorre el combo y la carta
+@media (min-width: 1100px) {
+  .pedir {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(320px, 25vw, 390px);
+    column-gap: clamp(1.5rem, 2.5vw, 2.75rem);
+    max-width: 1680px;
+    margin-inline: auto;
+    padding-right: var(--gutter);
   }
 
-  &__gradient {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, var(--color-bg-dark) 0%, transparent 60%);
-    z-index: 1;
+  .pedir__rail {
+    position: sticky;
+    top: 1.25rem;
+    align-self: start;
+    display: block;
+    max-height: calc(100svh - 2.5rem);
+    margin-top: 1.25rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
   }
+}
 
-  &__image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+// ── Terraza + reservas ───────────────────────────────────────────────────────
+.noche {
+  display: grid;
+  outline: none;
+}
+
+.noche__cab {
+  --focus: var(--carta-bottom);
+  padding: clamp(3.5rem, 9vw, 6rem) var(--gutter) clamp(2.5rem, 6vw, 3.5rem);
+  color: var(--carta-bottom);
+  background-color: var(--kraft-ink);
+
+  a {
+    padding-block: 0.7rem; // enlace dentro de una frase: más área para el dedo sin mover el texto
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+    white-space: nowrap;
   }
+}
 
-  &__content {
-    position: absolute;
-    bottom: 1.5rem;
-    left: 1.5rem;
-    right: 1.5rem;
-    z-index: 2;
-  }
+.noche__titulo {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3.25rem, 12.5vw, 7rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
 
-  &__badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: var(--radius-full);
-    background-color: var(--color-primary);
-    color: #fff;
-    font-size: 0.625rem;
-    font-weight: 700;
+.noche__lead {
+  max-width: 34ch;
+  margin-top: 1.25rem;
+  font-family: var(--font-lead);
+  font-weight: 600;
+  font-size: clamp(1.1875rem, 1rem + 0.6vw, 1.4375rem);
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+// Los pasos sí llevan número: el orden es la información
+.noche__pasos {
+  display: grid;
+  gap: 0.85rem;
+  max-width: 36ch;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgb(236 201 163 / 0.4);
+  list-style: none;
+  counter-reset: paso;
+
+  li {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    align-items: baseline;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 1.125rem;
+    line-height: 1.3;
+    letter-spacing: 0.03em;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  &__heading {
-    margin-top: 0.5rem;
-    font-size: 2.5rem;
-    line-height: 1.1;
-    color: #fff;
-
-    &--accent {
-      color: var(--color-primary);
-    }
-  }
-}
-
-/* ── Description ── */
-.description {
-  text-align: center;
-
-  &__title {
-    font-size: 1.5rem;
-    color: var(--color-text-primary);
-  }
-
-  &__body {
-    margin-top: 0.75rem;
-    font-size: 0.875rem;
-    line-height: 1.7;
-    color: var(--color-text-secondary);
-  }
-}
-
-/* ── CTA ── */
-.cta {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-/* ── Quiénes somos ── */
-.about {
-  padding-bottom: 3rem;
-
-  &__header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-
-  &__eyebrow {
-    display: inline-block;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--color-primary);
-    margin-bottom: 0.5rem;
-  }
-
-  &__title {
-    font-size: 1.875rem;
-    font-weight: 800;
-    color: var(--color-text-primary);
-    margin-bottom: 0.875rem;
-  }
-
-  &__divider {
-    width: 3rem;
-    height: 3px;
-    background: linear-gradient(90deg, var(--color-primary), transparent);
-    border-radius: 2px;
-    margin: 0 auto;
-  }
-
-  &__body {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  &__lead {
-    font-size: 1rem;
-    line-height: 1.75;
-    color: var(--color-text-secondary);
-    text-align: center;
-    max-width: 60ch;
-    margin: 0 auto;
-
-    strong { color: var(--color-text-primary); }
-  }
-
-  /* Feature cards */
-  &__cards {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-
-    @media (min-width: 640px) {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
-  }
-
-  &__card {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    padding: 1.25rem;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    transition: border-color 0.2s, box-shadow 0.2s;
-
-    &:hover {
-      border-color: var(--color-primary);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    p {
-      font-size: 0.875rem;
-      line-height: 1.65;
-      color: var(--color-text-secondary);
-      margin-top: 0.375rem;
-
-      strong { color: var(--color-text-primary); font-weight: 600; }
-    }
-  }
-
-  &__card-icon {
-    flex-shrink: 0;
-    font-size: 1.75rem;
-    color: var(--color-primary);
-    margin-top: 0.1rem;
-  }
-
-  &__card-title {
-    font-size: 0.9375rem;
-    font-weight: 700;
-    color: var(--color-text-primary);
-  }
-
-  /* Closing quote */
-  &__quote {
-    position: relative;
-    margin: 0;
-    padding: 1.25rem 1.5rem 1.25rem 2rem;
-    background: linear-gradient(135deg, var(--color-primary-10) 0%, transparent 100%);
-    border-left: 3px solid var(--color-primary);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    font-size: 0.9375rem;
-    line-height: 1.7;
-    color: var(--color-text-secondary);
-    font-style: italic;
-
-    strong { color: var(--color-text-primary); font-style: normal; }
+    counter-increment: paso;
 
     &::before {
-      content: '"';
-      position: absolute;
-      top: -0.5rem;
-      left: 0.75rem;
-      font-size: 4rem;
+      content: counter(paso);
+      font-family: var(--font-display);
+      font-size: 1.75rem;
       line-height: 1;
-      color: var(--color-primary);
-      opacity: 0.3;
-      font-style: normal;
+      color: var(--carta-mid);
     }
   }
 }
 
-/* ── Contact & Location ── */
-.contact {
-  padding-bottom: 3rem;
+.noche__grupos {
+  margin-top: 1.75rem;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 
-  &__header {
-    text-align: center;
-    margin-bottom: 2rem;
+.noche__form {
+  padding: clamp(2.5rem, 6vw, 4.5rem) var(--gutter) clamp(3.5rem, 8vw, 6rem);
+}
+
+.noche__espera {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 42rem; // reserva el alto del formulario: sin saltos de layout
+  max-width: 44rem;
+  padding: 1.5rem;
+  margin-inline: auto;
+  border: 1px solid var(--kraft-ink);
+  text-align: center;
+
+  a {
+    padding-block: 0.7rem; // enlace dentro de una frase: más área para el dedo sin mover el texto
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+}
+
+.noche__espera-txt {
+  font-family: var(--font-lead);
+  font-weight: 600;
+  font-size: 1.25rem;
+  text-transform: uppercase;
+}
+
+.noche__espera-alt {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 1000px) {
+  .noche {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   }
 
-  &__eyebrow {
-    display: inline-block;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--color-primary);
-    margin-bottom: 0.5rem;
+  .noche__cab-in {
+    position: sticky;
+    top: clamp(3.5rem, 9vw, 6rem);
   }
 
-  &__title {
-    font-size: 1.875rem;
-    font-weight: 800;
-    color: var(--color-text-primary);
-    margin-bottom: 0.875rem;
-  }
-
-  &__divider {
-    width: 3rem;
-    height: 3px;
-    background: linear-gradient(90deg, var(--color-primary), transparent);
-    border-radius: 2px;
-    margin: 0 auto;
-  }
-
-  /* Stack on mobile, side-by-side on wider screens */
-  &__layout {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-
-    @media (min-width: 640px) {
-      flex-direction: row;
-      align-items: stretch;
-      gap: 2rem;
-    }
-  }
-
-  /* Map */
-  &__map-wrapper {
-    flex: 1 1 0;
-    min-height: 260px;
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    border: 1px solid var(--color-border);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-
-    @media (min-width: 640px) {
-      min-height: 320px;
-    }
-  }
-
-  &__map {
-    width: 100%;
-    height: 100%;
-    display: block;
-    border: none;
-    min-height: 260px;
-
-    @media (min-width: 640px) {
-      min-height: 320px;
-    }
-  }
-
-  /* Contact details list */
-  &__details {
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    font-style: normal;
-
-    @media (min-width: 640px) {
-      min-width: 220px;
-      justify-content: center;
-    }
-  }
-
-  &__item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1rem 1.25rem;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    text-decoration: none;
-    color: inherit;
-    transition: border-color 0.2s, box-shadow 0.2s;
-
-    &[href]:hover {
-      border-color: var(--color-primary);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
-    }
-  }
-
-  &__item-icon {
-    flex-shrink: 0;
-    font-size: 1.5rem;
-    color: var(--color-primary);
-  }
-
-  &__item-label {
-    display: block;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-text-muted);
-    margin-bottom: 0.125rem;
-  }
-
-  &__item-value {
-    display: block;
-    font-size: 0.9375rem;
-    font-weight: 500;
-    color: var(--color-text-primary);
+  .noche__form {
+    align-self: start;
   }
 }

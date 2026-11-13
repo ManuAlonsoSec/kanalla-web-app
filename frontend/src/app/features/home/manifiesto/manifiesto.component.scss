@@ -1,0 +1,53 @@
+// Manifiesto: bloque tipográfico alineado a la izquierda y descolgado del margen,
+// con la firma a la derecha. Sin animación.
+
+.manifiesto {
+  display: grid;
+  gap: 2rem;
+  padding: clamp(4rem, 11vw, 9rem) var(--gutter) clamp(3.5rem, 9vw, 7rem);
+  border-top: 3px double var(--kraft-ink);
+}
+
+.manifiesto__cita {
+  margin: 0;
+}
+
+.manifiesto__texto {
+  max-width: 17ch;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.375rem, 1.4rem + 4.6vw, 6rem);
+  line-height: 1.18; // las tildes y la virgulilla de Anton suben ~0,2 em sobre la mayúscula
+  letter-spacing: 0.004em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+// El giro final, en cobre (texto grande: 3,2:1 sobre kraft-200)
+.manifiesto__giro {
+  color: var(--kraft-copper);
+}
+
+.manifiesto__firma {
+  justify-self: end;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 1.1875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 900px) {
+  .manifiesto {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: clamp(12px, 1.5vw, 24px);
+  }
+
+  .manifiesto__cita {
+    grid-column: 2 / 12;
+  }
+
+  .manifiesto__firma {
+    grid-column: 7 / 12;
+  }
+}

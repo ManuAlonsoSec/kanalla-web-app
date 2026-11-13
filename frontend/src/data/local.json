@@ -1,0 +1,96 @@
+{
+  "_ayuda": "Datos del local. Se usan en la web, el footer y el JSON-LD (SEO). El horario de reservas del formulario sale de la tabla restaurant_schedule de Supabase, no de aquí. pedidoMinimo: lista de tramos {zonas, importe} con el pedido mínimo de cada zona de reparto (confirmado por el dueño el 12-11-2026); gastosEnvio: texto tal cual se muestra en la comanda. Si alguno es null (o la lista está vacía), no se muestra. El horario de reparto es el mismo que el del local.",
+  "nombre": "Kanalla Skybar",
+  "url": "https://kanallaskybar.es",
+  "telefono": {
+    "texto": "668 56 93 90",
+    "href": "tel:+34668569390",
+    "e164": "+34668569390"
+  },
+  "whatsapp": {
+    "href": "https://wa.me/34668569390?text=Hola%20Kanalla%2C%20quiero%20hacer%20un%20pedido%20a%20domicilio"
+  },
+  "email": "kanallaskybar@gmail.com",
+  "direccion": {
+    "calle": "Av. de las Víctimas del Terrorismo, 1",
+    "cp": "28420",
+    "localidad": "Galapagar",
+    "region": "Madrid",
+    "pais": "ES"
+  },
+  "geo": {
+    "lat": 40.583826,
+    "lng": -3.99679
+  },
+  "mapa": "https://www.google.com/maps/place/Kanalla+SkyBar/@40.58383,-3.9993649,17z/data=!3m1!4b1!4m6!3m5!1s0xd41752dd3480815:0x544e9a7fefe86948!8m2!3d40.583826!4d-3.99679!16s%2Fg%2F11w8qw34c8",
+  "instagram": "https://www.instagram.com/kanallaskybar/",
+  "zonasReparto": [
+    "Galapagar",
+    "Colmenarejo",
+    "Collado Villalba",
+    "Torrelodones"
+  ],
+  "pedidoMinimo": [
+    {
+      "zonas": ["Galapagar"],
+      "importe": "20,00€"
+    },
+    {
+      "zonas": ["Colmenarejo"],
+      "importe": "30,00€"
+    },
+    {
+      "zonas": ["Collado Villalba", "Torrelodones"],
+      "importe": "40,00€"
+    }
+  ],
+  "gastosEnvio": "2,00€",
+  "horario": [
+    {
+      "dias": "Lunes",
+      "turnos": []
+    },
+    {
+      "dias": "Martes a jueves",
+      "turnos": [
+        "19:00–23:30"
+      ]
+    },
+    {
+      "dias": "Viernes, sábado y domingo",
+      "turnos": [
+        "12:00–16:00",
+        "19:00–00:00"
+      ]
+    }
+  ],
+  "horarioSchema": [
+    {
+      "dias": [
+        "Tuesday",
+        "Wednesday",
+        "Thursday"
+      ],
+      "abre": "19:00",
+      "cierra": "23:30"
+    },
+    {
+      "dias": [
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ],
+      "abre": "12:00",
+      "cierra": "16:00"
+    },
+    {
+      "dias": [
+        "Friday",
+        "Saturday",
+        "Sunday"
+      ],
+      "abre": "19:00",
+      "cierra": "00:00"
+    }
+  ]
+}

@@ -1,0 +1,266 @@
+// Ticket de la comanda: papel kraft claro con dientes abajo, saliendo de una ranura.
+// El papel va en un ::before (con la máscara de los dientes) para no recortar los
+// anillos de foco de los botones.
+
+.ticket {
+  position: relative;
+  display: block;
+  overflow: clip; // el papel «entra» en la ranura al imprimir una línea
+  color: var(--kraft-ink);
+}
+
+.ticket__ranura {
+  position: relative;
+  z-index: 2;
+  height: 14px;
+  background-color: var(--kraft-ink);
+  border-bottom: 4px solid var(--kraft-ink-deep); // labio de la ranura
+}
+
+.ticket__papel {
+  --diente: 10px;
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  margin: -4px 12px 0;
+  padding: 1.5rem 1.25rem calc(1.75rem + var(--diente));
+  font-family: var(--font-lead);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--carta-bottom);
+    -webkit-mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - var(--diente)) no-repeat,
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--diente) * 2)
+        var(--diente) repeat-x;
+    mask:
+      linear-gradient(#000 0 0) top / 100% calc(100% - var(--diente)) no-repeat,
+      conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) bottom / calc(var(--diente) * 2)
+        var(--diente) repeat-x;
+  }
+}
+
+.ticket__titulo {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.ticket__local {
+  margin-top: 0.3rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 2px dashed var(--kraft-ink);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.ticket__lineas {
+  list-style: none;
+  border-bottom: 2px dashed var(--kraft-ink);
+}
+
+.ticket__linea {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'ctrl nombre precio';
+  align-items: center;
+  gap: 0.25rem 0.6rem;
+  padding-block: 0.45rem;
+
+  & + & {
+    border-top: 1px solid rgb(73 35 16 / 0.18);
+  }
+}
+
+.ticket__nombre {
+  grid-area: nombre;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.ticket__detalle {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+}
+
+.ticket__precio {
+  grid-area: precio;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ticket__ctrl {
+  grid-area: ctrl;
+  display: flex;
+  align-items: center;
+}
+
+.ticket__cant {
+  min-width: 1.6em;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+// Botones −/+ : 40 px de área táctil, dibujo de 16 px
+.ticket__btn {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--kraft-ink);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--t-ui) var(--ease-out),
+    color var(--t-ui) var(--ease-out),
+    transform var(--t-press) var(--ease-out);
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    padding: 1px;
+    border: 1.5px solid currentColor;
+    box-sizing: content-box;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.25;
+  }
+
+  @media (hover: hover) {
+    &:hover svg {
+      background-color: var(--kraft-ink);
+      color: var(--carta-bottom);
+    }
+  }
+
+  &:active {
+    transform: scale(0.94);
+  }
+}
+
+.ticket__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding-top: 0.75rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.ticket__suma {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  color: var(--kraft-copper);
+  font-variant-numeric: tabular-nums;
+}
+
+.ticket__vacio {
+  padding-block: 1rem;
+  border-bottom: 2px dashed var(--kraft-ink);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  text-wrap: pretty;
+}
+
+.ticket__notas {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.9rem;
+}
+
+// Pedido mínimo por zona y envío: filas de ticket (zona a la izquierda, importe a la derecha)
+.ticket__reparto {
+  display: grid;
+  gap: 0.2rem;
+  margin-bottom: 0.4rem;
+  padding-bottom: 0.65rem;
+  border-bottom: 1.5px dashed var(--kraft-ink);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ticket__reparto-cab {
+  font-weight: 600;
+}
+
+.ticket__reparto dl {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.ticket__tramo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+
+  dd,
+  .ticket__importe {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  &--envio {
+    margin-top: 0.3rem;
+  }
+}
+
+.ticket__nota {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.04em;
+  text-wrap: pretty;
+
+  &--fuerte {
+    font-weight: 600;
+  }
+}
+
+.ticket__acciones {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+
+  .k-btn {
+    min-height: 3.25rem;
+    font-size: 0.8125rem;
+  }
+}
+
+.ticket__vaciar {
+  display: block;
+  margin: 0.5rem auto 0;
+  min-height: 2.75rem;
+  font-size: 0.75rem;
+}

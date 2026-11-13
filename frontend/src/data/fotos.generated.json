@@ -1,0 +1,63 @@
+{
+  "la-clasica": {
+    "original": "laclasicaedit.png",
+    "width": 912,
+    "height": 1152,
+    "widths": [
+      480,
+      720,
+      912
+    ]
+  },
+  "la-ramona": {
+    "original": "ramonaedit.png",
+    "width": 912,
+    "height": 1152,
+    "widths": [
+      480,
+      720,
+      912
+    ]
+  },
+  "nachos": {
+    "original": "nachos.png",
+    "width": 912,
+    "height": 1152,
+    "widths": [
+      480,
+      720,
+      912
+    ]
+  },
+  "tequenos": {
+    "original": "tequeños edit.png",
+    "width": 832,
+    "height": 1248,
+    "widths": [
+      480,
+      720,
+      832
+    ]
+  },
+  "fingers-de-pollo": {
+    "original": "Edit-this-photo-Keep-the-chicken-finger.png",
+    "width": 912,
+    "height": 1152,
+    "widths": [
+      480,
+      720,
+      912
+    ]
+  },
+  "la-puerca": {
+    "original": "la-puerca-kraft.jpg",
+    "width": 2488,
+    "height": 1536,
+    "widths": [
+      480,
+      720,
+      960,
+      1200
+    ]
+  }
+}

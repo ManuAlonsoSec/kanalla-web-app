@@ -1,0 +1,72 @@
+<dialog #dialog class="alergenos" aria-labelledby="alergenos-title" (click)="backdrop($event)">
+  <!-- La tabla (unos 600 elementos) se monta al abrir el diálogo por primera vez:
+       no pesa en la carga de la página. -->
+  @if (montado()) {
+  <div class="alergenos__body">
+    <header class="alergenos__head">
+      <h2 id="alergenos-title" class="alergenos__title k-display">Alérgenos</h2>
+      <button type="button" class="k-btn k-btn--line k-btn--sm alergenos__close" (click)="close()">
+        <span>Cerrar</span>
+      </button>
+    </header>
+
+    <dl class="alergenos__leyenda">
+      <div><dt>X</dt><dd>{{ datos.leyenda.X }}</dd></div>
+      <div><dt>T</dt><dd>{{ datos.leyenda.T }}</dd></div>
+      @for (l of leyendaSinGluten; track l[0]) {
+        <div><dt>Sin gluten: {{ l[0] }}</dt><dd>{{ l[1] }}</dd></div>
+      }
+    </dl>
+
+    <div class="alergenos__scroll" role="region" aria-labelledby="alergenos-caption" tabindex="0">
+      <table class="alergenos__tabla">
+        <caption id="alergenos-caption">
+          Alérgenos por plato. X: contiene. T: puede contener trazas.
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col" class="alergenos__plato-h">Plato</th>
+            <th scope="col" class="alergenos__vh"><span>Sin gluten</span></th>
+            @for (c of columnas; track c.key) {
+              <th scope="col" class="alergenos__vh"><span>{{ c.label }}</span></th>
+            }
+          </tr>
+        </thead>
+        @for (sec of secciones; track sec.nombre) {
+          <tbody>
+            <tr class="alergenos__grupo">
+              <th scope="rowgroup" [attr.colspan]="columnas.length + 2">{{ sec.nombre }}</th>
+            </tr>
+            @for (f of sec.filas; track f.plato) {
+              <tr>
+                <th scope="row" class="alergenos__plato">{{ f.plato }}</th>
+                @if (f.consulta) {
+                  <td class="alergenos__consulta" [attr.colspan]="columnas.length + 1">Consulta al personal</td>
+                } @else {
+                  <td class="alergenos__sg">{{ f.sinGluten }}</td>
+                  @for (c of f.celdas; track $index) {
+                    <td>
+                      @if (c === 'X') {
+                        <span aria-hidden="true">X</span><span class="sr-only">Contiene</span>
+                      } @else if (c === 'T') {
+                        <span aria-hidden="true">T</span><span class="sr-only">Trazas</span>
+                      }
+                    </td>
+                  }
+                }
+              </tr>
+            }
+          </tbody>
+        }
+      </table>
+    </div>
+
+    <p class="alergenos__nota">{{ datos.nota }}</p>
+    <p>
+      <a class="k-link" href="/images/tabla-alergenos-kanalla.jpg" download="kanalla-alergenos.jpg">
+        Descargar la tabla original (imagen JPG)
+      </a>
+    </p>
+  </div>
+  }
+</dialog>

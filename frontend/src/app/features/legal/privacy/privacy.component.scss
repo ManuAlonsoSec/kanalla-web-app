@@ -21,7 +21,6 @@
     margin-bottom: 1.5rem;
     transition: color 0.2s;
 
-    .material-symbols-outlined { font-size: 1rem; }
 
     &:hover { color: var(--color-primary); }
   }
@@ -62,9 +61,12 @@
       margin-bottom: 0.75rem;
       padding-bottom: 0.4rem;
       border-bottom: 1px solid var(--color-border);
+      text-wrap: balance;
     }
 
     p, li {
+      max-width: 58ch; /* líneas de lectura cómoda (la fuente es condensada: ~75 caracteres) */
+      text-wrap: pretty; /* sin palabras sueltas en la última línea */
       font-size: 0.9375rem;
       line-height: 1.75;
       color: var(--color-text-secondary);

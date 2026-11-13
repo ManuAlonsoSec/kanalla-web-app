@@ -1,0 +1,85 @@
+// Logo por capas (sin encapsulado; todo bajo `.logo`).
+//
+// Estructura:  .logo__layer (posición + avivado al hover)
+//                > .logo__inner (parpadeo)
+//                  > picture > img
+//
+// Solo se mueven las llamas, y solo dentro de un enlace (cabecera) o de `.logo-vivo` (hero):
+// · al cargar, un parpadeo lento: 2 ciclos de 2,2 s (menos de 5 s → WCAG 2.2.2)
+// · al pasar el ratón o enfocar, se avivan mientras dure
+// Con «reducir movimiento», quieto.
+
+.logo {
+  position: relative;
+  display: block;
+  overflow: hidden; // la variante mark recorta el lienzo a la cabeza
+  pointer-events: none;
+}
+
+.logo__art {
+  position: absolute;
+  inset: 0 0 auto 0;
+  display: block;
+  aspect-ratio: 748 / 882;
+}
+
+.logo__layer {
+  position: absolute;
+  display: block;
+}
+
+.logo__inner,
+.logo__inner picture,
+.logo__inner img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+// ── Llamas: crecen desde la base ─────────────────────────────────────────────
+.logo__layer--flames {
+  transform-origin: 50% 100%;
+  transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+
+  .logo__inner {
+    transform-origin: 50% 96%;
+  }
+}
+
+:is(a, .logo-vivo):is(:hover, :focus-visible) .logo__layer--flames {
+  transform: scaleY(1.14) translateY(-2%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :is(a, .logo-vivo) .logo__layer--flames .logo__inner {
+    animation: logo-flicker 2.2s cubic-bezier(0.37, 0, 0.63, 1) 0.4s 2 alternate both;
+  }
+
+  :is(a, .logo-vivo):is(:hover, :focus-visible) .logo__layer--flames .logo__inner {
+    animation: logo-flare 0.42s cubic-bezier(0.37, 0, 0.63, 1) infinite alternate;
+  }
+}
+
+@keyframes logo-flicker {
+  0% {
+    transform: none;
+  }
+  35% {
+    transform: scaleY(1.04) skewX(-0.8deg);
+  }
+  65% {
+    transform: scaleY(0.985) skewX(0.6deg);
+  }
+  100% {
+    transform: scaleY(1.02) skewX(-0.3deg);
+  }
+}
+
+@keyframes logo-flare {
+  from {
+    transform: scaleY(1) skewX(-1.5deg);
+  }
+  to {
+    transform: scaleY(1.09) skewX(1.5deg);
+  }
+}

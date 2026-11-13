@@ -1,0 +1,337 @@
+{
+  "actualizada": "2026-11",
+  "_ayuda": "Edita aquí la carta. id: identificador del plato en la comanda (no lo cambies si no cambia el plato). precio: texto tal cual se muestra (13,50€); «Consultar» si no tiene precio fijo. nuevo: kicker encima del nombre, o null. enTicket: cómo se llama en la comanda y en el WhatsApp si no basta el nombre (extras). alergenos: nombres de fila en alergenos.json, \"consulta\" para mostrar 'Consulta al personal' en la tabla, o \"nota\" si ya lo cubre la nota general. fotos: slugs de datos.ts. El orden de las secciones es el de la web.",
+  "secciones": [
+    {
+      "id": "hamburguesas",
+      "titulo": "Hamburguesas",
+      "fotos": [
+        "la-ramona",
+        "la-clasica"
+      ],
+      "platos": [
+        {
+          "id": "la-kanalla",
+          "nombre": "La Kanalla",
+          "precio": "13,50€",
+          "descripcion": "200 g de vaca de la Sierra de Guadarrama, queso cheddar, cebolla morada, cochinita pibil cocinada a baja temperatura y salsa honey.",
+          "nuevo": null,
+          "alergenos": [
+            "La Kanalla"
+          ]
+        },
+        {
+          "id": "la-ramona-2-0",
+          "nombre": "La Ramona 2.0",
+          "precio": "12,70€",
+          "descripcion": "Para los amantes de nuestro pollo marinado, la versión dospuntocero: queso Monterrey Jack, bacon ahumado, lechuga romana y salsa teriyaki.",
+          "nuevo": "Nueva hamburguesa",
+          "alergenos": "consulta"
+        },
+        {
+          "id": "la-necesaria-vegana",
+          "nombre": "La Necesaria (vegana)",
+          "precio": "13,00€",
+          "descripcion": "Nuestra opción vegana, a base de alcachofa y mix de verduras, sobre una cama de lechuga, tomate, cebolla encurtida y pepinillo.",
+          "nuevo": null,
+          "alergenos": [
+            "La Necesaria (vegetariana)",
+            "La Necesaria con pan sin gluten (vegana)"
+          ]
+        },
+        {
+          "id": "la-clasica",
+          "nombre": "La Clásica",
+          "precio": "13,50€",
+          "descripcion": "La burger del mes más vendida de este año. Doble disco de vaca tipo smash, cheddar, bacon, pepinillo, cebolla y salsa de la casa.",
+          "nuevo": "Nueva hamburguesa",
+          "alergenos": "consulta"
+        },
+        {
+          "id": "la-sinverguenza",
+          "nombre": "La Sinvergüenza",
+          "precio": "12,95€",
+          "descripcion": "200 g de vaca de la Sierra de Guadarrama, rúcula, queso de cabra y mayonesa chipotle.",
+          "nuevo": null,
+          "alergenos": [
+            "La Sinvergüenza"
+          ]
+        },
+        {
+          "id": "la-puerca",
+          "nombre": "La Puerca",
+          "precio": "14,00€",
+          "descripcion": "La burger del mes más vendida, que se queda en la carta para ser la séptima maravilla. 200 g de nuestra carne, cheddar y edam, mermelada de bacon casera con cebolla crunchy y, coronándolo todo, brioche glaseado.",
+          "nuevo": null,
+          "alergenos": [
+            "La Puerca"
+          ]
+        },
+        {
+          "id": "la-bribona",
+          "nombre": "La Bribona",
+          "precio": "12,50€",
+          "descripcion": "200 g de vaca de la Sierra de Guadarrama, queso edam, doble de bacon y salsa Emy.",
+          "nuevo": null,
+          "alergenos": [
+            "La Bribona"
+          ]
+        },
+        {
+          "id": "menu-infantil",
+          "nombre": "Menú infantil",
+          "precio": "9,95€",
+          "descripcion": "120 g de nuestra carne, queso y patatas (o finger de pollo en su lugar). Incluye bebida.",
+          "nuevo": null,
+          "alergenos": [
+            "Menú infantil"
+          ]
+        },
+        {
+          "id": "hamburguesa-del-mes",
+          "nombre": "Hamburguesa del mes",
+          "precio": "Consultar",
+          "descripcion": "Cambia cada mes. Pregúntanos cuál toca.",
+          "nuevo": null,
+          "alergenos": "nota"
+        }
+      ],
+      "nota": "Nuestras hamburguesas vienen sin patatas, pero por solo 4€ disfruta de nuestra ración de patatas naturales cortadas al momento. Recomendada para cada dos hamburguesas.",
+      "notaExtra": "Todas nuestras hamburguesas pueden pedirse con pan sin gluten (+1€). Consulta dudas a nuestro personal."
+    },
+    {
+      "id": "extras",
+      "titulo": "Extras",
+      "fotos": [],
+      "platos": [
+        {
+          "id": "carne",
+          "nombre": "Carne",
+          "precio": "6€",
+          "descripcion": null,
+          "nuevo": null,
+          "alergenos": "nota",
+          "enTicket": "Extra de carne"
+        },
+        {
+          "id": "huevo-bacon",
+          "nombre": "Huevo / bacon",
+          "precio": "1,50€",
+          "descripcion": null,
+          "nuevo": null,
+          "alergenos": "nota",
+          "enTicket": "Extra de huevo o bacon"
+        },
+        {
+          "id": "aguacate",
+          "nombre": "Aguacate",
+          "precio": "1,50€",
+          "descripcion": null,
+          "nuevo": null,
+          "alergenos": "nota",
+          "enTicket": "Extra de aguacate"
+        },
+        {
+          "id": "queso",
+          "nombre": "Queso",
+          "precio": "1€",
+          "descripcion": null,
+          "nuevo": null,
+          "alergenos": "nota",
+          "enTicket": "Extra de queso"
+        },
+        {
+          "id": "pan-sin-gluten",
+          "nombre": "Pan sin gluten",
+          "precio": "+1€",
+          "descripcion": null,
+          "nuevo": null,
+          "alergenos": "nota",
+          "enTicket": "Pan sin gluten"
+        },
+        {
+          "id": "racion-de-patatas",
+          "nombre": "Ración de patatas",
+          "precio": "4€",
+          "descripcion": "Patatas naturales, cortadas al momento. Recomendada para cada dos burgers.",
+          "nuevo": null,
+          "alergenos": "nota"
+        }
+      ],
+      "nota": null,
+      "notaExtra": null
+    },
+    {
+      "id": "entrantes",
+      "titulo": "Entrantes",
+      "fotos": [
+        "nachos",
+        "tequenos",
+        "fingers-de-pollo"
+      ],
+      "platos": [
+        {
+          "id": "empanadas",
+          "nombre": "Empanadas",
+          "precio": "8,50€",
+          "descripcion": "Las de siempre: masa de maíz con relleno de carne y patata.",
+          "nuevo": null,
+          "alergenos": [
+            "Empanadas colombianas"
+          ]
+        },
+        {
+          "id": "tequenos",
+          "nombre": "Tequeños",
+          "precio": "10€",
+          "descripcion": "Los de siempre, rellenos de mucho queso.",
+          "nuevo": "Nuevo entrante",
+          "alergenos": [
+            "Tequeños de queso"
+          ]
+        },
+        {
+          "id": "nachos",
+          "nombre": "Nachos",
+          "precio": "14€",
+          "descripcion": "Totopos de maíz, pico de gallo, guacamole, crema agria y, coronándolo, pulled pork en salsa de la casa.",
+          "nuevo": "Nuevo entrante",
+          "alergenos": "consulta"
+        },
+        {
+          "id": "bravas",
+          "nombre": "Bravas",
+          "precio": "6€",
+          "descripcion": "Cortadas a mano, naturales.",
+          "nuevo": null,
+          "alergenos": [
+            "Bravas"
+          ]
+        },
+        {
+          "id": "pekado",
+          "nombre": "Pekado",
+          "precio": "14€",
+          "descripcion": "Boniato frito, pollo marinado y rebozado y bacon jam, coronado con salsa cheddar.",
+          "nuevo": null,
+          "alergenos": [
+            "Pekado"
+          ]
+        },
+        {
+          "id": "fingers-de-pollo",
+          "nombre": "Fingers de pollo",
+          "precio": "12€",
+          "descripcion": "Nuestros fingers caseros de pechuga marinada, con la mítica salsa miel-mostaza.",
+          "nuevo": "Nuevo entrante",
+          "alergenos": [
+            "Fingers de pollo"
+          ]
+        },
+        {
+          "id": "atelier",
+          "nombre": "Atelier",
+          "precio": "11€",
+          "descripcion": "Patatas fritas, cochinita pibil, cebolla morada, queso rallado y salsa de yogur.",
+          "nuevo": null,
+          "alergenos": [
+            "Atelier"
+          ]
+        },
+        {
+          "id": "croquetas",
+          "nombre": "Croquetas",
+          "precio": "12€",
+          "descripcion": "Elige entre jamón, carabinero o boletus. O haz un mix.",
+          "nuevo": null,
+          "alergenos": [
+            "Croquetas"
+          ]
+        }
+      ],
+      "nota": null,
+      "notaExtra": null
+    },
+    {
+      "id": "ensaladas",
+      "titulo": "Ensaladas",
+      "fotos": [],
+      "platos": [
+        {
+          "id": "ensalada-kanalla",
+          "nombre": "Ensalada Kanalla",
+          "precio": "12€",
+          "descripcion": "Mezcla de brotes verdes, nueces, tomate fresco y queso de cabra tostado, aderezada con aceto balsámico.",
+          "nuevo": null,
+          "alergenos": [
+            "Ensalada Kanalla"
+          ]
+        },
+        {
+          "id": "ensalada-cesar",
+          "nombre": "Ensalada César",
+          "precio": "12€",
+          "descripcion": "Lechuga romana con crutones dorados, pollo marinado y rebozado y parmesano, coronado con nuestra cremosa y emblemática salsa César.",
+          "nuevo": null,
+          "alergenos": [
+            "Ensalada César"
+          ]
+        }
+      ],
+      "nota": null,
+      "notaExtra": null
+    },
+    {
+      "id": "postres",
+      "titulo": "Postres",
+      "fotos": [],
+      "platos": [
+        {
+          "id": "coulant-de-chocolate",
+          "nombre": "Coulant de chocolate",
+          "precio": "5€",
+          "descripcion": null,
+          "nuevo": null,
+          "alergenos": [
+            "Coulant de chocolate"
+          ]
+        },
+        {
+          "id": "tarta-de-queso-manchego",
+          "nombre": "Tarta de queso manchego",
+          "precio": "6€",
+          "descripcion": null,
+          "nuevo": null,
+          "alergenos": [
+            "Tarta de queso manchego"
+          ]
+        },
+        {
+          "id": "batido-de-oreo-o-lotus",
+          "nombre": "Batido de Oreo o Lotus",
+          "precio": "6€",
+          "descripcion": null,
+          "nuevo": null,
+          "alergenos": "consulta"
+        }
+      ],
+      "nota": null,
+      "notaExtra": null
+    }
+  ],
+  "combo": {
+    "_ayuda": "COMBO SOFÁ: solo pidiendo directo (WhatsApp o teléfono). precio: lo que paga el cliente. incluye: ids de platos que van siempre. burgers: cuántas elige. excluidas: ids de hamburguesas que no entran. El ahorro se calcula solo con los precios de la carta.",
+    "id": "combo-sofa",
+    "nombre": "Combo Sofá",
+    "precio": "35,00€",
+    "burgers": 2,
+    "incluye": [
+      "racion-de-patatas",
+      "tequenos"
+    ],
+    "excluidas": [
+      "menu-infantil",
+      "hamburguesa-del-mes"
+    ]
+  }
+}

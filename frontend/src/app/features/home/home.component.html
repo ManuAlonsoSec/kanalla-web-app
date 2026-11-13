@@ -1,153 +1,66 @@
-<article class="home">
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
 
-  <!-- ── Hero ─────────────────────────────────────── -->
-  <section class="hero" aria-label="Imagen principal">
-    <div class="hero__image-wrapper">
-      <div class="hero__gradient" aria-hidden="true"></div>
-      <img
-        class="hero__image"
-        src="2.png"
-        alt="Deliciosa hamburguesa gourmet con queso derretido sobre plato oscuro"
-        loading="eager"
-      />
-      <div class="hero__content">
-        <span class="hero__badge">La más kanalla</span>
-        <h2 class="hero__heading">
-          Hamburgesas <br />
-          <span class="hero__heading--accent">En otro nivel</span>
-        </h2>
+<header app-site-header></header>
+
+<main id="contenido" class="home__main" tabindex="-1">
+  <section app-hero></section>
+
+  <!-- La comanda: combo + carta, con el ticket al lado en escritorio -->
+  <div class="pedir">
+    <div class="pedir__main">
+      <section app-combo></section>
+      <section app-carta (alergenos)="alergenos().open()"></section>
+    </div>
+    <aside class="pedir__rail" id="comanda" aria-labelledby="ticket-rail-titulo" tabindex="-1">
+      <app-ticket variante="rail" />
+    </aside>
+  </div>
+
+  <section app-manifiesto></section>
+
+  <!-- Terraza + reservas en un solo bloque -->
+  <section class="noche" id="reservas" aria-labelledby="reservas-title" tabindex="-1">
+    <div class="noche__cab">
+      <div class="noche__cab-in">
+        <h2 id="reservas-title" class="noche__titulo">Reserva en la terraza</h2>
+        <p class="noche__lead">
+          Nuestro espacio es exterior: aquí solo se reserva terraza. Si prefieres cenar en casa,
+          <a href="#carta">pide a domicilio</a>.
+        </p>
+        <ol class="noche__pasos">
+          <li>Rellena el formulario con el día, la hora y cuántos sois.</li>
+          <li>Para confirmar tu reserva te pediremos entrar con Google.</li>
+          <li>Te llamamos al teléfono que nos dejes para confirmarla.</li>
+        </ol>
+        <p class="noche__grupos">
+          ¿Sois 10 o más? Llámanos al <a [href]="local.telefono.href">{{ local.telefono.texto }}</a>.
+        </p>
       </div>
     </div>
-  </section>
 
-  <!-- ── Description ───────────────────────────────── -->
-  <section class="description section-px" aria-label="Sobre nosotros">
-    <h3 class="description__title">Kanalla Sky Bar</h3>
-    <p class="description__body">
-      Experience the best burgers with a view. Elegant, bold, and uniquely Kanalla.
-      Located in the heart of the city with the best panoramic views.
-    </p>
-  </section>
-
-  <!-- ── CTA Buttons ───────────────────────────────── -->
-  <section class="cta section-px" aria-label="Acciones rápidas">
-    <a class="btn btn-primary" routerLink="/menu">
-      <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
-      Ver Carta
-    </a>
-    <a class="btn btn-outline" routerLink="/reservas">
-      <span class="material-symbols-outlined" aria-hidden="true">event_available</span>
-      Reservas
-    </a>
-  </section>
-
-  <!-- ── Quiénes somos ─────────────────────────────── -->
-  <section class="about section-px" aria-labelledby="about-heading">
-
-    <header class="about__header">
-      <span class="about__eyebrow">Sobre nosotros</span>
-      <h2 id="about-heading" class="about__title">Quiénes Somos</h2>
-      <div class="about__divider" aria-hidden="true"></div>
-    </header>
-
-    <div class="about__body">
-
-      <p class="about__lead">
-        Bienvenidos a la experiencia <strong>"Kanalla Skybar"</strong> un lugar donde la calidad
-        y el buen gusto se encuentran en cada plato.
-      </p>
-
-      <div class="about__cards">
-
-        <div class="about__card">
-          <span class="material-symbols-outlined about__card-icon" aria-hidden="true">lunch_dining</span>
-          <div>
-            <h3 class="about__card-title">Kanalla Burguer</h3>
-            <p>
-              Nace con la intención de deleitar a los amantes de las hamburguesas. Elaboradas con carne
-              <strong>100% de denominación de origen Sierra de Guadarrama</strong>, un verdadero manjar
-              que no deja indiferente a nadie.
-            </p>
-          </div>
+    <div class="noche__form">
+      <!-- El formulario (y Supabase) se cargan al acercarse a esta sección, o al momento
+           si vienes de /reservas o del login de Google. -->
+      @defer (on viewport; when urgent()) {
+        <app-booking />
+      } @placeholder {
+        <div class="noche__espera">
+          <p class="noche__espera-txt">Cargando el formulario…</p>
+          <p class="noche__espera-alt">¿Con prisa? Llámanos al <a [href]="local.telefono.href">{{ local.telefono.texto }}</a>.</p>
         </div>
-
-        <div class="about__card">
-          <span class="material-symbols-outlined about__card-icon" aria-hidden="true">deck</span>
-          <div>
-            <h3 class="about__card-title">Terraza con vistas inigualables</h3>
-            <p>
-              Contamos con una amplia y preciosa terraza, el lugar perfecto para disfrutar del buen
-              tiempo con vistas inigualables.
-            </p>
-          </div>
+      } @loading (minimum 0ms) {
+        <div class="noche__espera" aria-live="polite">
+          <p class="noche__espera-txt">Cargando el formulario…</p>
         </div>
-
-      </div>
-
-      <blockquote class="about__quote">
-        En nuestro espacio, cuidamos cada detalle para ofrecerte productos de primera calidad, en un
-        entorno acogedor y con un ambiente único. <strong>¡Te esperamos para que disfrutes de una
-        experiencia inigualable!</strong>
-      </blockquote>
-
+      }
     </div>
-
   </section>
+</main>
 
-  <!-- ── Contact & Location ────────────────── -->
-  <section class="contact section-px" aria-labelledby="contact-heading">
+<footer app-site-footer (alergenos)="alergenos().open()"></footer>
 
-    <header class="contact__header">
-      <span class="contact__eyebrow">Dónde estamos</span>
-      <h2 id="contact-heading" class="contact__title">Visita y Contacto</h2>
-      <div class="contact__divider" aria-hidden="true"></div>
-    </header>
+<app-barra-pedido [shown]="barShown()" [railVisible]="sinPestana()" />
+<app-alergenos />
 
-    <div class="contact__layout">
-
-      <!-- Map -->
-      <div class="contact__map-wrapper">
-        <iframe
-          class="contact__map"
-          src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12120.349632055691!2d-3.99679!3d40.583826!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd41752dd3480815%3A0x544e9a7fefe86948!2sKanalla%20SkyBar!5e0!3m2!1ses!2ses!4v1773080020167!5m2!1ses!2ses"
-          title="Ubicación de Kanalla SkyBar en Google Maps"
-          allowfullscreen
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        ></iframe>
-      </div>
-
-      <!-- Contact details -->
-      <address class="contact__details">
-
-        <a class="contact__item" href="tel:+34668569390">
-          <span class="contact__item-icon material-symbols-outlined" aria-hidden="true">phone</span>
-          <div>
-            <span class="contact__item-label">Teléfono</span>
-            <span class="contact__item-value">+34 668 569 390</span>
-          </div>
-        </a>
-
-        <a class="contact__item" href="mailto:kanallaskybar@gmail.com">
-          <span class="contact__item-icon material-symbols-outlined" aria-hidden="true">mail</span>
-          <div>
-            <span class="contact__item-label">Email</span>
-            <span class="contact__item-value">kanallaskybar&#64;gmail.com</span>
-          </div>
-        </a>
-
-        <div class="contact__item">
-          <span class="contact__item-icon material-symbols-outlined" aria-hidden="true">location_on</span>
-          <div>
-            <span class="contact__item-label">Dirección</span>
-            <span class="contact__item-value">Av. de las Víctimas del Terrorismo, 1, 28420 Galapagar, Madrid</span>
-          </div>
-        </div>
-
-      </address>
-
-    </div>
-
-  </section>
-
-</article>
+<!-- Lo que se apunta o se quita de la comanda, para lectores de pantalla -->
+<p class="sr-only" aria-live="polite">{{ comanda.anuncio() }}</p>

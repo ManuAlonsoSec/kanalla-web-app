@@ -1,44 +1,22 @@
 import { Routes } from '@angular/router';
-import { adminGuard } from './core/guards/admin.guard';
+import { HomeComponent } from './features/home/home.component';
 
 export const routes: Routes = [
-  {
-    path: '',
-    loadComponent: () =>
-      import('./features/home/home.component').then((m) => m.HomeComponent),
-  },
-  {
-    path: 'menu',
-    loadComponent: () =>
-      import('./features/menu/menu.component').then((m) => m.MenuComponent),
-  },
-  {
-    path: 'reservas',
-    loadComponent: () =>
-      import('./features/booking/booking.component').then((m) => m.BookingComponent),
-  },
-  // ─── Admin (hidden — not linked in public UI) ───────────────────────────────
+  // ─── Web pública: una sola página ───────────────────────────────────────────
+  // La home va en el paquete inicial (sin esperar a otro chunk para hidratar);
+  // el admin y las legales siguen cargándose aparte.
+  { path: '', component: HomeComponent },
+  // `/reservas` muestra la misma página y baja al formulario. Se mantiene porque
+  // el login de Google (Supabase OAuth) vuelve a la URL desde la que se envió.
+  { path: 'reservas', component: HomeComponent, data: { seccion: 'reservas' } },
+  // URL antigua de la carta en PDF
+  { path: 'menu', redirectTo: '/', pathMatch: 'full' },
+  // ─── Admin (oculto — no enlazado en la web pública) ─────────────────────────
   {
     path: 'admin',
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./features/admin/admin-login/admin-login.component').then(
-            (m) => m.AdminLoginComponent,
-          ),
-      },
-      {
-        path: 'dashboard',
-        canActivate: [adminGuard],
-        loadComponent: () =>
-          import('./features/admin/admin-dashboard/admin-dashboard.component').then(
-            (m) => m.AdminDashboardComponent,
-          ),
-      },
-    ],
+    loadChildren: () => import('./features/admin/admin.routes').then((m) => m.ADMIN_ROUTES),
   },
-  // ─── Legal pages ────────────────────────────────────────────────────────────
+  // ─── Páginas legales ────────────────────────────────────────────────────────
   {
     path: 'privacidad',
     loadComponent: () =>

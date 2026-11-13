@@ -1,46 +1,80 @@
-/* ─────────────────────────────────────────
-   Kanalla Sky Bar — Global Styles
-   Design System: Dark mode, golden accent
-───────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────────────────
+   Kanalla Skybar — estilos globales
+   Design system «Carta» (nov 2026): kraft + tinta, cobre solo en texto grande,
+   Anton a tamaño cartel. Dirección «La comanda» con hero cartel.
+   Gesto de firma: el ticket (talón del hero, precio del combo, comanda).
+   ───────────────────────────────────────────────────────────────────────────── */
 
-/* Google Fonts & Material Symbols */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
-
-/* ── Design Tokens ── */
+/* ── Tokens ─────────────────────────────────────────────────────────────────── */
 :root {
+  /* Carta (kraft) */
+  --carta-top: #cf9e76;
+  --carta-mid: #ddac81;
+  --carta-bottom: #ecc9a3;
+  --kraft-200: #e3b88e;
+  --kraft-ink: #492310; /* títulos, texto, logo — 5,8–8,8:1 sobre kraft */
+  --kraft-ink-deep: #2e1509; /* labio de la ranura del ticket */
+  --kraft-copper: #955510; /* SOLO texto grande y bold, sobre kraft-200 o más claro (≥ 3,2:1) */
+  --kraft-hint: #7a4a26; /* placeholders: 4,7:1 sobre carta-bottom */
+
+  --carta-gradient: linear-gradient(180deg, var(--carta-top) 0%, var(--carta-mid) 48%, var(--carta-bottom) 100%);
+  --carta-gradient-light: linear-gradient(180deg, var(--kraft-200) 0%, var(--carta-bottom) 100%);
+
+  /* Tipografía */
+  --font-display: 'Anton', 'Arial Narrow', sans-serif;
+  --font-kicker: 'Poppins', 'Arial Narrow', sans-serif;
+  --font-body: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-lead: 'Barlow Semi Condensed', 'Arial Narrow', sans-serif;
+
+  /* Ritmo */
+  --gutter: clamp(16px, 5vw, 56px);
+  --header-h: 60px;
+  --bar-h: 0px; /* alto de la barra fija de pedido (móvil): deja sitio al foco y al pie */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  /* Movimiento (emil-design-eng): ease-out fuerte, nada de ease-in; UI < 300 ms */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --t-press: 120ms; /* pulsación: scale(.97) */
+  --t-ui: 180ms; /* hover, cambios de color */
+
+  /* Tokens del tema anterior: los usan el panel de admin y las páginas legales */
   --color-primary: #8b7355;
   --color-primary-light: #a8956e;
   --color-primary-dark: #6e5c44;
   --color-primary-10: rgba(139, 115, 85, 0.1);
   --color-primary-20: rgba(139, 115, 85, 0.2);
   --color-primary-shadow: rgba(139, 115, 85, 0.3);
-
   --color-bg-dark: #1b1917;
   --color-bg-light: #f7f7f6;
   --color-surface: #242220;
   --color-border: rgba(139, 115, 85, 0.2);
-
   --color-text-primary: #f1f0ee;
   --color-text-secondary: #9e9790;
   --color-text-muted: #6b6560;
-
-  --font-display: 'Space Grotesk', sans-serif;
-
+  --font-legacy: var(--font-lead); /* fuentes de la marca, autoalojadas (antes, una fuente de Google Fonts) */
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-full: 9999px;
-
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
-
-  /* safe areas for devices with notch / home bar */
-  --safe-top: env(safe-area-inset-top, 0px);
-  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* ── Reset & Base ── */
+@media (max-width: 1099px) {
+  :root {
+    --bar-h: 4.5rem;
+  }
+}
+
+@media (min-width: 900px) {
+  :root {
+    --header-h: 72px;
+  }
+}
+
+/* ── Reset y base ───────────────────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
@@ -50,30 +84,36 @@
 }
 
 html {
-  font-size: 16px;
-  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: 1rem;
+  scroll-padding-bottom: calc(var(--bar-h) + 1rem); /* la barra fija no tapa el foco (WCAG 2.4.11) */
+  background-color: var(--kraft-200);
+  scrollbar-color: var(--kraft-ink) var(--kraft-200);
+  accent-color: var(--kraft-ink);
 }
 
 body {
-  font-family: var(--font-display);
-  background-color: var(--color-bg-dark);
-  color: var(--color-text-primary);
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+  color: var(--kraft-ink);
+  background-color: var(--kraft-200);
+  caret-color: var(--kraft-ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  min-height: 100dvh;
-  overflow-x: hidden;
+  overflow-x: clip;
+  text-rendering: optimizeLegibility;
 }
 
-/* ── Typography ── */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+img,
+svg,
+picture,
+video {
+  display: block;
+  max-width: 100%;
 }
 
 a {
@@ -81,13 +121,286 @@ a {
   text-decoration: none;
 }
 
-img,
-svg {
-  display: block;
-  max-width: 100%;
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
 }
 
-/* ── Material Symbols Outlined ── */
+button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-weight: 400;
+  line-height: 1;
+}
+
+::selection {
+  background: var(--kraft-ink);
+  color: var(--carta-bottom);
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus, var(--kraft-ink));
+  outline-offset: 3px;
+}
+
+/* ── Utilidades de tipografía ──────────────────────────────────────────────── */
+.k-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 0.92;
+  letter-spacing: 0.004em;
+  font-kerning: normal;
+}
+
+/* Kicker ENCIMA del título (lo impone la carta impresa). Cobre solo a 19 px bold. */
+.k-kicker {
+  display: block;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 1.1875rem;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--kraft-copper);
+}
+
+.k-kicker--ink {
+  color: var(--kraft-ink);
+  font-size: 0.8125rem;
+  letter-spacing: 0.18em;
+}
+
+.k-lead {
+  font-family: var(--font-lead);
+  font-weight: 600;
+  font-size: clamp(1.0625rem, 1rem + 0.4vw, 1.3125rem);
+  line-height: 1.3;
+  letter-spacing: 0.01em;
+}
+
+.k-caps {
+  font-family: var(--font-body);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Enlace de texto: 44 px de alto real */
+.k-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.35em;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 0.95rem 1rem;
+  background: var(--kraft-ink);
+  color: var(--carta-bottom);
+  font: 700 0.875rem/1 var(--font-kicker);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transform: translateY(-160%);
+
+  &:focus-visible {
+    transform: none;
+    outline-color: var(--carta-bottom);
+  }
+}
+
+/* ── Botones ─────────────────────────────────────────────────────────────────
+   Sin esquinas redondeadas ni sombras. Respuesta inmediata (emil-design-eng):
+   · al pulsar, scale(.97) en 120 ms
+   · al pasar por encima, el color cambia en 180 ms (solo con ratón)
+   ─────────────────────────────────────────────────────────────────────────── */
+.k-btn {
+  --btn-bg: var(--kraft-ink);
+  --btn-fg: var(--carta-bottom);
+  --btn-line: var(--kraft-ink);
+  --btn-hover: var(--kraft-ink-deep);
+  --btn-hover-fg: var(--carta-bottom);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-height: 3.375rem;
+  padding: 0.85rem 1.5rem;
+  font-family: var(--font-kicker);
+  font-weight: 700;
+  font-size: 0.875rem;
+  line-height: 1.15;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--btn-fg);
+  background-color: var(--btn-bg);
+  border: 2px solid var(--btn-line);
+  border-radius: 0;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--t-ui) var(--ease-out),
+    color var(--t-ui) var(--ease-out),
+    transform var(--t-press) var(--ease-out);
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--btn-hover-fg);
+      background-color: var(--btn-hover);
+    }
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* De línea: se rellena de tinta al pasar por encima */
+.k-btn--line {
+  --btn-bg: transparent;
+  --btn-fg: var(--kraft-ink);
+  --btn-hover: var(--kraft-ink);
+  --btn-hover-fg: var(--carta-bottom);
+}
+
+/* Variantes para fondos de tinta */
+.k-btn--kraft {
+  --btn-bg: var(--carta-bottom);
+  --btn-fg: var(--kraft-ink);
+  --btn-line: var(--carta-bottom);
+  --btn-hover: var(--carta-mid);
+  --btn-hover-fg: var(--kraft-ink);
+}
+
+.k-btn--line-kraft {
+  --btn-bg: transparent;
+  --btn-fg: var(--carta-bottom);
+  --btn-line: var(--carta-bottom);
+  --btn-hover: var(--carta-bottom);
+  --btn-hover-fg: var(--kraft-ink);
+}
+
+.k-btn--sm {
+  min-height: 2.75rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.75rem;
+}
+
+.k-btn--block {
+  display: flex;
+  width: 100%;
+}
+
+/* ── Lo que queda bajo el primer pantallazo no se maqueta hasta acercarse ──────
+   (content-visibility: el primer pintado no calcula la carta entera). El alto
+   estimado evita saltos en la barra de desplazamiento. */
+.combo,
+.carta .sec,
+.carta .sec-par,
+.manifiesto,
+.noche,
+.site-footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+/* ── Reducir movimiento: todo quieto ─────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   Tema anterior — panel de admin (oscuro) y páginas legales (tokens a kraft).
+   No afecta a la web pública.
+   ═════════════════════════════════════════════════════════════════════════════ */
+body.theme-admin {
+  font-family: var(--font-legacy);
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: normal;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-dark);
+  background-image: none;
+}
+
+body.theme-legal {
+  --color-primary: var(--kraft-ink);
+  --color-primary-light: var(--kraft-ink);
+  --color-primary-10: rgba(73, 35, 16, 0.08);
+  --color-primary-20: rgba(73, 35, 16, 0.18);
+  --color-bg-dark: var(--kraft-200);
+  --color-surface: var(--carta-bottom);
+  --color-border: rgba(73, 35, 16, 0.25);
+  --color-text-primary: var(--kraft-ink);
+  --color-text-secondary: var(--kraft-ink);
+  --color-text-muted: var(--kraft-ink);
+  --font-legacy: var(--font-lead);
+  font-family: var(--font-lead);
+  font-weight: 600;
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+  }
+}
+
+/* Iconos del panel de admin: subconjunto autoalojado de Material Symbols Outlined
+   (Apache 2.0) con solo los 26 iconos que usa. Solo se descarga si se pinta un icono. */
+@font-face {
+  font-family: 'Material Symbols Outlined';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url(/fonts/material-symbols-admin.woff2) format('woff2');
+}
+
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined', sans-serif;
   font-weight: normal;
@@ -105,7 +418,6 @@ svg {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ── Utility: hide scrollbar on specific containers ── */
 .no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -115,13 +427,11 @@ svg {
   }
 }
 
-/* ── Utility: full-bleed section ── */
 .section-px {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
 }
 
-/* ── Button base ── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -129,7 +439,7 @@ svg {
   gap: 0.5rem;
   padding: 1rem 1.5rem;
   border-radius: var(--radius-lg);
-  font-family: var(--font-display);
+  font-family: var(--font-legacy);
   font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.05em;

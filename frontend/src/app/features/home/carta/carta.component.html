@@ -1,0 +1,157 @@
+<header class="carta__cab">
+  <h2 id="carta-title" class="carta__titulo">La carta</h2>
+  <p class="carta__lema">Pide directo. Sin intermediarios, con todo el sabor.</p>
+  <p class="carta__como">Toca + en lo que te apetezca: lo apuntamos en tu comanda y nos la mandas por WhatsApp.</p>
+</header>
+
+<!-- Un plato: nombre, precio, «+» y la descripción de la carta impresa -->
+<ng-template #plato let-p>
+  <li class="plato" [class.is-apuntado]="cuantos(p.id)">
+    <h4 class="plato__nombre">
+      {{ p.nombre }}
+      @if (p.nuevo) {
+        <span class="plato__nuevo">{{ p.nuevo.startsWith('Nueva') ? 'Nueva' : 'Nuevo' }}</span>
+      }
+    </h4>
+    <p class="plato__precio">
+      @if (cuantos(p.id)) {
+        <span class="plato__n">×{{ cuantos(p.id) }}</span>
+      }
+      {{ p.precio }}
+    </p>
+    <button type="button" class="plato__mas" (click)="apuntar(p.id)">
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5v11M2.5 8h11" /></svg>
+      <span class="sr-only">Apuntar {{ p.nombre }}@if (cuantos(p.id)) {, llevas {{ cuantos(p.id) }}}</span>
+    </button>
+    @if (p.descripcion) {
+      <p class="plato__desc">{{ p.descripcion }}</p>
+    }
+  </li>
+</ng-template>
+
+<!-- Hamburguesas: título a lo ancho; La Puerca destacada con su foto; el aviso de las
+     patatas junto a un collage de dos recortes; el resto de la lista a dos columnas -->
+<section class="sec sec--burgers" aria-labelledby="sec-hamburguesas">
+  <h3 id="sec-hamburguesas" class="sec__titulo sec__titulo--xl">{{ s['hamburguesas'].titulo }}</h3>
+
+  <!-- Plato destacado: La Puerca con su foto -->
+  <article class="destacada" [class.is-apuntado]="cuantos(destacada.id)">
+    <figure class="destacada__foto">
+      <picture class="recorte">
+        <source type="image/avif" [attr.srcset]="fotos.puerca.avif" sizes="(min-width: 1100px) 34vw, 92vw" />
+        <source type="image/webp" [attr.srcset]="fotos.puerca.webp" sizes="(min-width: 1100px) 34vw, 92vw" />
+        <img [src]="fotos.puerca.jpg" [alt]="fotos.puerca.alt" [width]="fotos.puerca.width" [height]="fotos.puerca.height" loading="lazy" decoding="async" />
+      </picture>
+    </figure>
+    <div class="destacada__txt">
+      <h4 class="destacada__nombre">{{ destacada.nombre }}</h4>
+      <p class="destacada__precio">
+        {{ destacada.precio }}
+        @if (cuantos(destacada.id)) {
+          <span class="plato__n">Llevas {{ cuantos(destacada.id) }}</span>
+        }
+      </p>
+      @if (destacada.descripcion) {
+        <p class="plato__desc">{{ destacada.descripcion }}</p>
+      }
+      <button type="button" class="patatas__btn destacada__btn" (click)="apuntar(destacada.id)">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5v11M2.5 8h11" /></svg>
+        <span>Apúntala<span class="sr-only">: {{ destacada.nombre }}</span></span>
+      </button>
+    </div>
+  </article>
+
+  <div class="sec__intro">
+  <p class="patatas">
+    <span class="patatas__txt">{{ s['hamburguesas'].nota }}</span>
+    <button type="button" class="patatas__btn" (click)="apuntar('racion-de-patatas')">
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5v11M2.5 8h11" /></svg>
+      <span>Apuntar ración de patatas</span>
+    </button>
+  </p>
+
+  <div class="collage">
+    @for (f of [fotos.clasica, fotos.ramona]; track f.slug) {
+      <figure class="collage__foto">
+        <picture class="recorte">
+          <source type="image/avif" [attr.srcset]="f.avif" sizes="(min-width: 1100px) 16vw, 42vw" />
+          <source type="image/webp" [attr.srcset]="f.webp" sizes="(min-width: 1100px) 16vw, 42vw" />
+          <img [src]="f.jpg" [alt]="f.alt" [width]="f.width" [height]="f.height" loading="lazy" decoding="async" />
+        </picture>
+        <figcaption class="collage__pie">{{ f.plato }}</figcaption>
+      </figure>
+    }
+  </div>
+  </div>
+
+  <ul class="platos platos--dos" role="list">
+    @for (p of burgers; track p.id) {
+      <ng-container *ngTemplateOutlet="plato; context: { $implicit: p }" />
+    }
+  </ul>
+
+  <p class="sec__nota">{{ s['hamburguesas'].notaExtra }}</p>
+</section>
+
+<!-- Extras: una tira, como al pie de la página de hamburguesas -->
+<section class="sec sec--extras" aria-labelledby="sec-extras">
+  <h3 id="sec-extras" class="sec__titulo sec__titulo--s">{{ s['extras'].titulo }}</h3>
+  <ul class="extras" role="list">
+    @for (p of s['extras'].platos; track p.id) {
+      <li class="extra" [class.is-apuntado]="cuantos(p.id)">
+        <span class="extra__nombre">{{ p.nombre }}</span>
+        <span class="extra__precio">
+          @if (cuantos(p.id)) {
+            <span class="plato__n">×{{ cuantos(p.id) }}</span>
+          }
+          {{ p.precio }}
+        </span>
+        <button type="button" class="plato__mas plato__mas--s" (click)="apuntar(p.id)">
+          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5v11M2.5 8h11" /></svg>
+          <span class="sr-only">Apuntar {{ p.enTicket ?? p.nombre }}@if (cuantos(p.id)) {, llevas {{ cuantos(p.id) }}}</span>
+        </button>
+      </li>
+    }
+  </ul>
+</section>
+
+<!-- Entrantes: la foto a un lado, la lista al otro -->
+<section class="sec sec--entrantes" aria-labelledby="sec-entrantes">
+  <figure class="sec__foto">
+    <picture class="recorte">
+      <source type="image/avif" [attr.srcset]="fotos.nachos.avif" sizes="(min-width: 1100px) 22vw, 60vw" />
+      <source type="image/webp" [attr.srcset]="fotos.nachos.webp" sizes="(min-width: 1100px) 22vw, 60vw" />
+      <img [src]="fotos.nachos.jpg" [alt]="fotos.nachos.alt" [width]="fotos.nachos.width" [height]="fotos.nachos.height" loading="lazy" decoding="async" />
+    </picture>
+    <figcaption class="collage__pie">{{ fotos.nachos.plato }}</figcaption>
+  </figure>
+  <div class="sec__cuerpo">
+    <h3 id="sec-entrantes" class="sec__titulo sec__titulo--l">{{ s['entrantes'].titulo }}</h3>
+    <ul class="platos" role="list">
+      @for (p of s['entrantes'].platos; track p.id) {
+        <ng-container *ngTemplateOutlet="plato; context: { $implicit: p }" />
+      }
+    </ul>
+  </div>
+</section>
+
+<!-- Ensaladas y postres, en pareja -->
+<div class="sec-par">
+  @for (id of ['ensaladas', 'postres']; track id) {
+    <section class="sec sec--par" [attr.aria-labelledby]="'sec-' + id">
+      <h3 [id]="'sec-' + id" class="sec__titulo sec__titulo--m">{{ s[id].titulo }}</h3>
+      <ul class="platos" role="list">
+        @for (p of s[id].platos; track p.id) {
+          <ng-container *ngTemplateOutlet="plato; context: { $implicit: p }" />
+        }
+      </ul>
+    </section>
+  }
+</div>
+
+<p class="carta__alergenos">
+  ¿Alergias o intolerancias? Avísanos al pedir y
+  <button type="button" class="carta__alergenos-btn" (click)="alergenos.emit()" aria-haspopup="dialog">
+    consulta la tabla de alérgenos
+  </button>.
+</p>

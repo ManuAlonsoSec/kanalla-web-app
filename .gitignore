@@ -58,3 +58,18 @@ ARCHITECTURE.md
 # Vercel
 # ──────────────────────────────────────────
 .vercel/
+
+# ──────────────────────────────────────────
+# Skills de agente (se reinstalan desde skills-lock.json: ver README)
+# ──────────────────────────────────────────
+.claude/skills/
+.agents/skills/
+.impeccable/config.local.json
+
+# ──────────────────────────────────────────
+# docs/: solo se suben los .md (análisis y auditorías). Capturas, maquetas y
+# salidas del detector se quedan en local.
+# ──────────────────────────────────────────
+/docs/**
+!/docs/**/
+!/docs/**/*.md

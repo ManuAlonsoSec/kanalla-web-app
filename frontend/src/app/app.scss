@@ -1,11 +1,4 @@
 :host {
-  display: flex;
-  flex-direction: column;
+  display: block;
   min-height: 100dvh;
-}
-
-.main-content {
-  flex: 1;
-  /* Leave space for fixed bottom nav */
-  padding-bottom: calc(5rem + var(--safe-bottom));
 }
