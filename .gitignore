@@ -68,8 +68,10 @@ ARCHITECTURE.md
 
 # ──────────────────────────────────────────
 # docs/: solo se suben los .md (análisis y auditorías). Capturas, maquetas y
-# salidas del detector se quedan en local.
+# salidas del detector se quedan en local, salvo docs/auditoria/capturas/.
 # ──────────────────────────────────────────
 /docs/**
 !/docs/**/
 !/docs/**/*.md
+# Excepción: las pocas capturas que enlazan los informes y el PR
+!/docs/auditoria/capturas/*.jpg

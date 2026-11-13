@@ -17,6 +17,9 @@
 
 .hero__logo {
   width: var(--logo-w);
+  // El logo va siempre RECTO: sin rotate, skew ni transform en él, en sus capas ni en
+  // sus contenedores, en ningún tamaño ni animación (decisión del dueño, 13-11-2026).
+  // Su borde izquierdo cae en el margen de la página, como el resto del hero.
   // La tinta del logo se «imprime» sobre el kraft
   mix-blend-mode: multiply;
 
@@ -191,15 +194,11 @@
   }
 }
 
-// ── Móvil: logo arriba a la izquierda, titular pegado al borde derecho ────────
+// ── Móvil: logo arriba a la izquierda (en el margen), titular pegado al borde derecho ──
 .hero--a {
   --logo-w: min(52vw, 16rem);
   --l: clamp(4rem, 27.4vw, 9rem);
 
-  .hero__logo {
-    margin-left: -1vw;
-    rotate: -3deg;
-  }
 
   .hero__titulo {
     justify-self: end;
@@ -226,9 +225,8 @@
     .hero__logo {
       grid-column: 1 / 6;
       grid-row: 1 / 4;
-      align-self: center;
-      justify-self: center;
-      margin-left: 0;
+      align-self: start; // la punta de las llamas, a la altura del kicker
+      justify-self: start; // borde izquierdo en el margen, como la navegación
     }
 
     .hero__cab {

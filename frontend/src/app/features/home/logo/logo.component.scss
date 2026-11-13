@@ -8,6 +8,9 @@
 // · al cargar, un parpadeo lento: 2 ciclos de 2,2 s (menos de 5 s → WCAG 2.2.2)
 // · al pasar el ratón o enfocar, se avivan mientras dure
 // Con «reducir movimiento», quieto.
+//
+// Las llamas solo se estiran y encogen (scale): nada de rotate ni skew, que inclinarían
+// el logo. El logo va siempre recto.
 
 .logo {
   position: relative;
@@ -65,21 +68,21 @@
     transform: none;
   }
   35% {
-    transform: scaleY(1.04) skewX(-0.8deg);
+    transform: scale(0.99, 1.04);
   }
   65% {
-    transform: scaleY(0.985) skewX(0.6deg);
+    transform: scale(1.01, 0.985);
   }
   100% {
-    transform: scaleY(1.02) skewX(-0.3deg);
+    transform: scale(1, 1.02);
   }
 }
 
 @keyframes logo-flare {
   from {
-    transform: scaleY(1) skewX(-1.5deg);
+    transform: scale(1.015, 1);
   }
   to {
-    transform: scaleY(1.09) skewX(1.5deg);
+    transform: scale(0.985, 1.09);
   }
 }
