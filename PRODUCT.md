@@ -61,7 +61,7 @@ Vinculantes (del brief y del dueño):
   - **Hero:** el logo es la imagen (grande, a la izquierda, con las llamas animadas) y el titular «KANALLA SE NACE.» va en Anton a sangre a la derecha, con el kicker «GALAPAGAR · BURGERS · ROOFTOP» en cobre, el horario de hoy, las zonas y el talón «Pide directo · WhatsApp». En móvil, el logo arriba y el titular debajo. Sin fotos de platos: esas van solo en la carta, donde La Puerca es el plato destacado.
   - **Resto de la página:** la comanda. Cada plato lleva «+» y el ticket kraft va fijo (lateral en escritorio, barra y hoja en móvil).
 - **Gesto de firma: el ticket**, como mucho tres veces (talón del hero, precio del combo y la comanda). Nada de revelados genéricos al hacer scroll.
-- **Logo:** se ve desde el primer pintado, sin trazo ni viaje al header. Solo se mueven las llamas: un parpadeo lento de menos de 5 s y se avivan al pasar el ratón.
+- **Logo:** se ve desde el primer pintado, sin trazo ni viaje al header. Va siempre **recto**: sin rotación ni inclinación en ningún tamaño de pantalla ni animación (decisión del dueño, 13-11-2026). Solo se mueven las llamas, que se estiran y encogen: un parpadeo lento de menos de 5 s y se avivan al pasar el ratón.
 
 ## Evidence on Hand
 

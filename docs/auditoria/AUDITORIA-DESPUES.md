@@ -90,7 +90,7 @@ Todas las curvas son ease-out fuertes: `cubic-bezier(.23, 1, .32, 1)`, o la de c
 | Número de la barra móvil | Sube y aparece en 180 ms | Se ve que la comanda ha cambiado. |
 | Barra móvil | Entra en 250 ms y sale en 180 ms | La salida, más rápida. |
 | Hoja del ticket (móvil) | Sube en 260 ms (cajón) y baja en 200 ms; fondo en 200 ms | |
-| Llamas del logo | Parpadeo lento de 2 × 2,2 s (menos de 5 s, WCAG 2.2.2); se avivan mientras pasas el ratón | Lo pidió el dueño. |
+| Llamas del logo | Parpadeo lento de 2 × 2,2 s (menos de 5 s, WCAG 2.2.2); se avivan mientras pasas el ratón. Solo se estiran y encogen: el logo va siempre recto, sin rotación ni skew | Lo pidió el dueño. |
 | Diálogo de alérgenos | 240 ms, desde 10 px | No escala desde 0. |
 
 ## Pendiente

@@ -25,6 +25,12 @@ En `/reservas` las buenas prácticas dan 96 solo en local, porque sin `.env.loca
 | Enlaces dentro de frases (teléfonos, «pide a domicilio», política de privacidad) con menos de 24 px de alto táctil. | Más área para el dedo sin mover el texto. «Saltar al contenido» pasa a 44 px. |
 | Páginas legales: líneas de más de 85 caracteres, viudas y títulos descompensados (9 avisos del detector). | Ancho de lectura, `text-wrap: pretty` y títulos equilibrados. |
 
+## Cambio posterior (13 nov): el logo de portada, recto
+
+El logo del hero iba girado 3° y sus llamas se inclinaban al animarse. Ahora va recto en todos los tamaños y animaciones, con el borde izquierdo en el margen de la página y, en escritorio, la punta de las llamas a la altura del kicker. Comprobado a 1440, 1024 y 390, en reposo, durante el parpadeo y con el ratón encima: ningún `rotate`, `skew` ni `transform` inclinado en el logo, sus capas, sus pseudo-elementos ni sus contenedores.
+
+![Hero antes y después: logo girado frente a logo recto, a 1440, 1024 y 390 px](capturas/logo-recto-antes-despues.jpg)
+
 ## Qué cubren las pruebas
 
 **Comanda (unitarias y en navegador):**
@@ -57,7 +63,7 @@ En `/reservas` las buenas prácticas dan 96 solo en local, porque sin `.env.loca
 
    Mientras no se aplique, la web dice «Los lunes descansamos» y a la vez acepta reservas para el lunes. El archivo no está en la rama, para que nada lo aplique por accidente.
 
-2. **Reserva de prueba de principio a fin.** Falta el paso del inicio de sesión con Google, que tiene que hacer una persona. Comprueba la vuelta del login a la vista previa, el guardado de la reserva y el mensaje de confirmación.
+2. **Reserva de prueba de principio a fin: hecha el 13 nov.** El dueño la envió desde la vista previa con su cuenta de Google. La web volvió a la vista previa, guardó la reserva y mostró «¡Reserva enviada!». Queda borrarla en Supabase (nombre «PRUEBA CLAUDE – BORRAR», lunes 16-11-2026 a las 19:00).
 
 3. **Caso límite conocido:** si alguien cambia las burgers del Combo Sofá en los primeros segundos, antes de que cargue Angular, la selección vuelve a las de por defecto. Lo que se ve y lo que se apunta coinciden.
 
