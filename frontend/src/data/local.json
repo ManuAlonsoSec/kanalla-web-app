@@ -1,5 +1,5 @@
 {
-  "_ayuda": "Datos del local. Se usan en la web, el footer y el JSON-LD (SEO). El horario de reservas del formulario sale de la tabla restaurant_schedule de Supabase, no de aquí. pedidoMinimo: lista de tramos {zonas, importe} con el pedido mínimo de cada zona de reparto (confirmado por el dueño el 12-11-2026); gastosEnvio: texto tal cual se muestra en la comanda. Si alguno es null (o la lista está vacía), no se muestra. El horario de reparto es el mismo que el del local.",
+  "_ayuda": "Datos del local. Se usan en la web, el footer y el JSON-LD (SEO). horario (pie) y horarioSchema (cabecera «Hoy» y JSON-LD) tienen que decir lo mismo: manda el horario del asistente de pedidos. El horario de reservas del formulario sale de la tabla restaurant_schedule de Supabase, no de aquí. pedidoMinimo: tramos {zonas, importe} con el mínimo de cada zona de reparto, calculado sobre los productos sin el envío; gastosEnvio: envío fijo, se suma al total de la comanda. zonasReparto: orden del selector de zona.",
   "nombre": "Kanalla Skybar",
   "url": "https://kanallaskybar.es",
   "telefono": {
@@ -27,20 +27,27 @@
   "zonasReparto": [
     "Galapagar",
     "Colmenarejo",
-    "Collado Villalba",
-    "Torrelodones"
+    "Torrelodones",
+    "Collado Villalba"
   ],
   "pedidoMinimo": [
     {
-      "zonas": ["Galapagar"],
+      "zonas": [
+        "Galapagar"
+      ],
       "importe": "20,00€"
     },
     {
-      "zonas": ["Colmenarejo"],
+      "zonas": [
+        "Colmenarejo"
+      ],
       "importe": "30,00€"
     },
     {
-      "zonas": ["Collado Villalba", "Torrelodones"],
+      "zonas": [
+        "Torrelodones",
+        "Collado Villalba"
+      ],
       "importe": "40,00€"
     }
   ],
@@ -53,14 +60,21 @@
     {
       "dias": "Martes a jueves",
       "turnos": [
-        "19:00–23:30"
+        "19:45–23:00"
       ]
     },
     {
-      "dias": "Viernes, sábado y domingo",
+      "dias": "Viernes y sábado",
       "turnos": [
-        "12:00–16:00",
-        "19:00–00:00"
+        "13:00–15:30",
+        "19:45–23:30"
+      ]
+    },
+    {
+      "dias": "Domingo",
+      "turnos": [
+        "13:00–15:30",
+        "19:45–23:00"
       ]
     }
   ],
@@ -71,26 +85,38 @@
         "Wednesday",
         "Thursday"
       ],
-      "abre": "19:00",
+      "abre": "19:45",
+      "cierra": "23:00"
+    },
+    {
+      "dias": [
+        "Friday",
+        "Saturday"
+      ],
+      "abre": "13:00",
+      "cierra": "15:30"
+    },
+    {
+      "dias": [
+        "Friday",
+        "Saturday"
+      ],
+      "abre": "19:45",
       "cierra": "23:30"
     },
     {
       "dias": [
-        "Friday",
-        "Saturday",
         "Sunday"
       ],
-      "abre": "12:00",
-      "cierra": "16:00"
+      "abre": "13:00",
+      "cierra": "15:30"
     },
     {
       "dias": [
-        "Friday",
-        "Saturday",
         "Sunday"
       ],
-      "abre": "19:00",
-      "cierra": "00:00"
+      "abre": "19:45",
+      "cierra": "23:00"
     }
   ]
 }

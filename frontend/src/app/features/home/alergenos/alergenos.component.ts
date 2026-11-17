@@ -42,7 +42,8 @@ export class AlergenosComponent {
   protected readonly columnas = ALERGENOS.alergenos.map((k) => ({ key: k, label: ALERGENOS.etiquetas[k] }));
   protected readonly leyendaSinGluten = Object.entries(ALERGENOS.leyenda.sinGluten);
 
-  protected readonly secciones = ALERGENOS.secciones.map((sec) => {
+  protected readonly secciones = [
+    ...ALERGENOS.secciones.map((sec) => {
     const filas: Fila[] = sec.platos.map((p) => ({
       plato: p.plato,
       sinGluten: p.sinGluten,
@@ -56,8 +57,18 @@ export class AlergenosComponent {
         filas.push({ plato: p.nombre, sinGluten: '', celdas: [], consulta: true });
       }
     }
-    return { nombre: sec.seccion, filas };
-  });
+      return { nombre: sec.seccion, filas };
+    }),
+    // Secciones de la carta que la tabla oficial no recoge (bebidas): «Consulta al personal»
+    ...CARTA.filter((c) => !ALERGENOS.secciones.some((sec) => sec.seccion === c.titulo))
+      .map((c) => ({
+        nombre: c.titulo,
+        filas: c.platos
+          .filter((p) => p.alergenos === 'consulta')
+          .map((p): Fila => ({ plato: p.nombre, sinGluten: '', celdas: [], consulta: true })),
+      }))
+      .filter((sec) => sec.filas.length),
+  ];
 
   private readonly injector = inject(Injector);
 

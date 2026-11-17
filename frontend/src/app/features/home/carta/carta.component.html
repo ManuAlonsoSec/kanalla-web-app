@@ -29,6 +29,35 @@
   </li>
 </ng-template>
 
+<!-- Una tira entre filetes (extras y bebidas): nombre, precio y «+» en línea -->
+<ng-template #tira let-sec>
+  <section class="sec sec--extras" [attr.aria-labelledby]="'sec-' + sec.id">
+    <h3 [id]="'sec-' + sec.id" class="sec__titulo sec__titulo--s">
+      {{ sec.titulo }}
+      @if (sec.nota) {
+        <span class="sec__sub">{{ sec.nota }}</span>
+      }
+    </h3>
+    <ul class="extras" role="list">
+      @for (p of sec.platos; track p.id) {
+        <li class="extra" [class.is-apuntado]="cuantos(p.id)">
+          <span class="extra__nombre">{{ p.nombre }}</span>
+          <span class="extra__precio">
+            @if (cuantos(p.id)) {
+              <span class="plato__n">×{{ cuantos(p.id) }}</span>
+            }
+            {{ p.precio }}
+          </span>
+          <button type="button" class="plato__mas plato__mas--s" (click)="apuntar(p.id)">
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5v11M2.5 8h11" /></svg>
+            <span class="sr-only">Apuntar {{ p.enTicket ?? p.nombre }}@if (cuantos(p.id)) {, llevas {{ cuantos(p.id) }}}</span>
+          </button>
+        </li>
+      }
+    </ul>
+  </section>
+</ng-template>
+
 <!-- Hamburguesas: título a lo ancho; La Puerca destacada con su foto; el aviso de las
      patatas junto a un collage de dos recortes; el resto de la lista a dos columnas -->
 <section class="sec sec--burgers" aria-labelledby="sec-hamburguesas">
@@ -94,26 +123,7 @@
 </section>
 
 <!-- Extras: una tira, como al pie de la página de hamburguesas -->
-<section class="sec sec--extras" aria-labelledby="sec-extras">
-  <h3 id="sec-extras" class="sec__titulo sec__titulo--s">{{ s['extras'].titulo }}</h3>
-  <ul class="extras" role="list">
-    @for (p of s['extras'].platos; track p.id) {
-      <li class="extra" [class.is-apuntado]="cuantos(p.id)">
-        <span class="extra__nombre">{{ p.nombre }}</span>
-        <span class="extra__precio">
-          @if (cuantos(p.id)) {
-            <span class="plato__n">×{{ cuantos(p.id) }}</span>
-          }
-          {{ p.precio }}
-        </span>
-        <button type="button" class="plato__mas plato__mas--s" (click)="apuntar(p.id)">
-          <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5v11M2.5 8h11" /></svg>
-          <span class="sr-only">Apuntar {{ p.enTicket ?? p.nombre }}@if (cuantos(p.id)) {, llevas {{ cuantos(p.id) }}}</span>
-        </button>
-      </li>
-    }
-  </ul>
-</section>
+<ng-container *ngTemplateOutlet="tira; context: { $implicit: s['extras'] }" />
 
 <!-- Entrantes: la foto a un lado, la lista al otro -->
 <section class="sec sec--entrantes" aria-labelledby="sec-entrantes">
@@ -148,6 +158,9 @@
     </section>
   }
 </div>
+
+<!-- Bebidas: otra tira. El Combo Sofá no incluye bebida. -->
+<ng-container *ngTemplateOutlet="tira; context: { $implicit: s['bebidas'] }" />
 
 <p class="carta__alergenos">
   ¿Alergias o intolerancias? Avísanos al pedir y

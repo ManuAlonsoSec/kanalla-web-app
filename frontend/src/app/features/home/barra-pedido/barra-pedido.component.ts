@@ -22,7 +22,9 @@ const RAIL = '(min-width: 1100px)';
 /**
  * Pedido siempre a mano.
  * · Móvil: barra fija abajo. Sin comanda: WhatsApp + llamar. Con comanda:
- *   «Tu comanda · 3 · 28,00€» (abre la hoja con el ticket) + «Mandar».
+ *   «Tu comanda · 3 · 28,00€» (abre la hoja con el ticket) + «Mandar». Si falta la zona
+ *   o no llega al pedido mínimo, en vez de «Mandar» pone «Elige zona» o «Faltan 5,00 €»
+ *   y abre el ticket.
  * · Escritorio: el ticket va en el lateral; esta barra solo aparece como pestaña
  *   compacta cuando hay comanda y el lateral no se ve.
  * Oculta, no se puede enfocar (visibility: hidden).
@@ -47,9 +49,16 @@ const RAIL = '(min-width: 1100px)';
           >
           <span class="sr-only">: ver el ticket</span>
         </button>
-        <a class="k-btn k-btn--line k-btn--line-kraft barra__wa" [href]="comanda.whatsapp()" target="_blank" rel="noopener">
-          <span>Mandar<span class="sr-only"> la comanda por WhatsApp (se abre WhatsApp)</span></span>
-        </a>
+        @if (comanda.puedeEnviar()) {
+          <a class="k-btn k-btn--line k-btn--line-kraft barra__wa" [href]="comanda.whatsapp()" target="_blank" rel="noopener">
+            <span>Mandar<span class="sr-only"> la comanda por WhatsApp (se abre WhatsApp)</span></span>
+          </a>
+        } @else {
+          <!-- Falta la zona o no llega al mínimo: lleva al ticket, donde se resuelve -->
+          <button type="button" class="k-btn k-btn--line k-btn--line-kraft barra__wa" (click)="abrir()" [attr.aria-haspopup]="'dialog'">
+            <span>{{ comanda.zona() ? 'Faltan ' + falta() : 'Elige zona' }}<span class="sr-only">: ver el ticket</span></span>
+          </button>
+        }
       } @else {
         <a class="k-btn k-btn--kraft" [href]="local.whatsapp.href" target="_blank" rel="noopener">
           <span><span class="barra__largo">Pide por </span>WhatsApp<span class="sr-only"> (se abre WhatsApp)</span></span>
@@ -79,6 +88,7 @@ export class BarraPedidoComponent {
   protected readonly local = LOCAL;
   protected readonly n = this.comanda.unidades;
   protected readonly total = computed(() => euros(this.comanda.total()));
+  protected readonly falta = computed(() => euros(this.comanda.falta()).replace('€', ' €'));
   protected readonly tab = computed(() => this.n() > 0 && !this.railVisible());
 
   private readonly doc = inject(DOCUMENT);

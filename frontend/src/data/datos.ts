@@ -40,6 +40,8 @@ export interface Combo {
   incluye: string[];
   /** ids de hamburguesas que no se pueden elegir */
   excluidas: string[];
+  /** id de hamburguesa → suplemento que suma al precio base («1€») */
+  suplementos?: Record<string, string>;
 }
 
 export interface FilaAlergenos {
@@ -70,6 +72,17 @@ export function centimos(precio: string): number | null {
   const m = /(\d+)(?:,(\d{1,2}))?\s*€/.exec(precio);
   if (!m) return null;
   return Number(m[1]) * 100 + Number((m[2] ?? '0').padEnd(2, '0'));
+}
+
+/** Pedido mínimo (céntimos) de una zona de reparto; 0 si la zona no tiene mínimo. */
+export function minimoDe(zona: string): number {
+  const tramo = LOCAL.pedidoMinimo?.find((m) => m.zonas.includes(zona));
+  return (tramo && centimos(tramo.importe)) || 0;
+}
+
+/** 100 → «1€», 150 → «1,50€»: importes cortos para suplementos y mínimos. */
+export function eurosCorto(cents: number): string {
+  return euros(cents).replace(',00', '');
 }
 
 /** 1350 → «13,50€». */

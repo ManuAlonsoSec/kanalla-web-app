@@ -1,14 +1,19 @@
 import { DOCUMENT, Injectable, computed, effect, inject, signal } from '@angular/core';
-import { CARTA, COMBO, LOCAL, PLATOS, centimos, euros, type Plato } from '../../../../data/datos';
+import { CARTA, COMBO, LOCAL, PLATOS, centimos, euros, eurosCorto, minimoDe, type Plato } from '../../../../data/datos';
 
 // ──────────────────────────────────────────────────────────────────────────────
 // La comanda: lo que el cliente va apuntando con «+». Todo pasa en el navegador:
 // sin backend, sin pago y sin tocar las reservas. Termina en un enlace de WhatsApp
 // con el pedido ya escrito (o en una llamada).
 //
-// · Se guarda en localStorage (solo ids y cantidades) y se vuelve a poner precio
+// · Se guarda en localStorage (solo ids, cantidades y zona) y se vuelve a poner precio
 //   con la carta actual al recuperarla: si la carta cambia, el ticket cambia con ella.
-// · El mensaje de WhatsApp incluye «COMBO SOFÁ» cuando lo lleva, para poder medirlo.
+// · Zona de reparto obligatoria: de ella sale el pedido mínimo (sobre los productos,
+//   sin el envío). El envío es fijo y se suma al total.
+// · El mensaje de WhatsApp lo lee el asistente de pedidos (n8n), que crea el pedido en
+//   el TPV. Reconoce los pedidos de la web por el inicio exacto
+//   «Hola Kanalla, quiero hacer un pedido a domicilio:» y el combo por «COMBO SOFÁ».
+//   NO cambiar ese formato sin cambiar también el asistente.
 // ──────────────────────────────────────────────────────────────────────────────
 
 export interface Linea {
@@ -29,6 +34,11 @@ interface Guardada {
 }
 
 const STORAGE_KEY = 'kanalla_comanda_v1';
+const ZONA_KEY = 'kanalla_zona_v1';
+/** Inicio exacto del mensaje: el asistente lo usa para reconocer los pedidos de la web. */
+export const INICIO_PEDIDO = 'Hola Kanalla, quiero hacer un pedido a domicilio:';
+/** Envío fijo en todas las zonas (céntimos). */
+export const ENVIO = centimos(LOCAL.gastosEnvio ?? '') ?? 0;
 const WA_NUMERO = LOCAL.telefono.e164.replace('+', '');
 const MAX_POR_LINEA = 20;
 
@@ -40,17 +50,33 @@ export const BURGERS_COMBO: Plato[] = (CARTA.find((s) => s.id === 'hamburguesas'
 const PRECIO_COMBO = centimos(COMBO.precio) ?? 0;
 const PRECIO_INCLUYE = COMBO.incluye.reduce((t, id) => t + (centimos(PLATOS.get(id)?.precio ?? '') ?? 0), 0);
 
-/** Lo que te ahorras con esas dos burgers frente a pedirlo todo por separado (céntimos). */
-export function ahorroCombo(ids: string[]): number {
-  const sueltos = ids.reduce((t, id) => t + (centimos(PLATOS.get(id)?.precio ?? '') ?? 0), 0) + PRECIO_INCLUYE;
-  return Math.max(0, sueltos - PRECIO_COMBO);
+/** Suplemento (céntimos) que suma una burger al precio base del combo; 0 si no tiene. */
+export function suplementoCombo(id: string): number {
+  return centimos(COMBO.suplementos?.[id] ?? '') ?? 0;
 }
 
-/** El máximo que se puede ahorrar (las más caras, se puede repetir burger). */
-export const AHORRO_MAX = (() => {
-  const max = Math.max(...BURGERS_COMBO.map((p) => centimos(p.precio) ?? 0));
-  return ahorroCombo(Array(COMBO.burgers).fill(BURGERS_COMBO.find((p) => centimos(p.precio) === max)?.id ?? ''));
-})();
+/** Precio del combo con esas burgers: el base más el suplemento de cada una (céntimos). */
+export function precioCombo(ids: string[]): number {
+  return PRECIO_COMBO + ids.reduce((t, id) => t + suplementoCombo(id), 0);
+}
+
+/**
+ * Lo que te ahorras con esas burgers frente a pedirlo todo por separado (céntimos):
+ * precio de carta de las burgers + lo que incluye el combo − precio del combo.
+ */
+export function ahorroCombo(ids: string[]): number {
+  const sueltos = ids.reduce((t, id) => t + (centimos(PLATOS.get(id)?.precio ?? '') ?? 0), 0) + PRECIO_INCLUYE;
+  return Math.max(0, sueltos - precioCombo(ids));
+}
+
+/** Todas las combinaciones posibles de burgers del combo (se puede repetir). */
+function combinaciones(n: number): string[][] {
+  if (n === 0) return [[]];
+  return combinaciones(n - 1).flatMap((c) => BURGERS_COMBO.map((p) => [...c, p.id]));
+}
+
+/** El máximo que se puede ahorrar con las burgers permitidas. */
+export const AHORRO_MAX = Math.max(0, ...combinaciones(COMBO.burgers).map(ahorroCombo));
 
 export function comboKey(ids: string[]): string {
   return `${COMBO.id}:${[...ids].sort().join('+')}`;
@@ -69,7 +95,29 @@ export class ComandaService {
   readonly lineas = this._lineas.asReadonly();
 
   readonly unidades = computed(() => this._lineas().reduce((n, l) => n + l.cantidad, 0));
-  readonly total = computed(() => this._lineas().reduce((t, l) => t + (l.precio ?? 0) * l.cantidad, 0));
+  /** Productos, sin el envío. Sobre esto se calcula el pedido mínimo. */
+  readonly subtotal = computed(() => this._lineas().reduce((t, l) => t + (l.precio ?? 0) * l.cantidad, 0));
+  /** Envío: fijo, en cuanto hay algo apuntado. */
+  readonly envio = computed(() => (this._lineas().length ? ENVIO : 0));
+  /** Total orientativo: productos + envío. */
+  readonly total = computed(() => this.subtotal() + this.envio());
+
+  /** Zona de reparto elegida (obligatoria para mandar el pedido). */
+  private readonly _zona = signal<string | null>(null);
+  readonly zona = this._zona.asReadonly();
+  /** Pedido mínimo de la zona elegida (céntimos); 0 sin zona. */
+  readonly minimo = computed(() => (this._zona() ? minimoDe(this._zona()!) : 0));
+  /** Lo que falta para llegar al mínimo de la zona (céntimos). */
+  readonly falta = computed(() => Math.max(0, this.minimo() - this.subtotal()));
+  /** Se puede mandar: hay algo apuntado, hay zona y llega al mínimo. */
+  readonly puedeEnviar = computed(() => this._lineas().length > 0 && this._zona() !== null && this.falta() === 0);
+  /** Por qué no se puede mandar todavía (texto visible junto al botón), o null. */
+  readonly aviso = computed(() => {
+    if (!this._lineas().length) return null;
+    if (!this._zona()) return 'Elige tu zona de reparto para mandar el pedido.';
+    if (this.falta() > 0) return `Te faltan ${euros(this.falta()).replace('€', ' €')} para el mínimo de ${this._zona()}`;
+    return null;
+  });
   readonly aConsultar = computed(() => this._lineas().some((l) => l.precio === null));
   /** Cantidad apuntada por id de plato (sin combos). */
   readonly porPlato = computed(
@@ -93,14 +141,17 @@ export class ComandaService {
   readonly mensaje = computed(() => {
     const lineas = this._lineas();
     if (!lineas.length) return 'Hola Kanalla, quiero hacer un pedido a domicilio.';
-    const out = ['Hola Kanalla, quiero hacer un pedido a domicilio:', ''];
+    const out = [INICIO_PEDIDO, ''];
     for (const l of lineas) {
       const nombre = l.combo ? l.nombre.toUpperCase() : l.nombre;
       const detalle = l.detalle ? ` (${l.detalle})` : '';
       const precio = l.precio === null ? 'precio a consultar' : euros(l.precio * l.cantidad);
       out.push(`${l.cantidad} x ${nombre}${detalle}: ${precio}`);
     }
-    out.push('', `Total orientativo: ${euros(this.total())}${this.aConsultar() ? ' + lo que haya que consultar' : ''}`);
+    out.push('');
+    if (this._zona()) out.push(`Zona: ${this._zona()}`);
+    if (this.envio()) out.push(`Envío: ${euros(this.envio())}`);
+    out.push(`Total orientativo: ${euros(this.total())}${this.aConsultar() ? ' + lo que haya que consultar' : ''}`);
     out.push('', 'Dirección: ');
     return out.join('\n');
   });
@@ -122,6 +173,25 @@ export class ComandaService {
         /* modo privado o almacenamiento bloqueado: la comanda vive solo en esta visita */
       }
     });
+    effect(() => {
+      const zona = this._zona();
+      if (!this.restaurada) return;
+      try {
+        if (zona) this.win?.localStorage.setItem(ZONA_KEY, zona);
+        else this.win?.localStorage.removeItem(ZONA_KEY);
+      } catch {
+        /* igual que arriba */
+      }
+    });
+  }
+
+  /** Elige la zona de reparto (o la quita con null). Solo acepta zonas de reparto reales. */
+  elegirZona(zona: string | null): void {
+    const valida = zona && LOCAL.zonasReparto.includes(zona) ? zona : null;
+    this._zona.set(valida);
+    if (!valida) return;
+    const aviso = this.aviso();
+    this.anuncio.set(aviso ? `Zona: ${valida}. ${aviso}.` : `Zona: ${valida}. Ya puedes mandar el pedido.`);
   }
 
   /** Recupera la comanda guardada. Se llama tras hidratar (el HTML prerenderizado va vacío). */
@@ -130,6 +200,8 @@ export class ComandaService {
     this.restaurada = true;
     let guardadas: unknown;
     try {
+      const zona = this.win?.localStorage.getItem(ZONA_KEY);
+      if (zona && LOCAL.zonasReparto.includes(zona)) this._zona.set(zona);
       guardadas = JSON.parse(this.win?.localStorage.getItem(STORAGE_KEY) ?? '[]');
     } catch {
       return;
@@ -185,8 +257,11 @@ export class ComandaService {
 
   private anunciar(texto: string): void {
     const n = this.unidades();
-    const resumen = n ? ` Llevas ${n} ${n === 1 ? 'cosa' : 'cosas'}, ${euros(this.total())} orientativos.` : ' La comanda está vacía.';
-    this.anuncio.set(texto + resumen);
+    const resumen = n
+      ? ` Llevas ${n} ${n === 1 ? 'cosa' : 'cosas'}, ${euros(this.total())} orientativos con el envío.`
+      : ' La comanda está vacía.';
+    const aviso = this._zona() && this.falta() > 0 ? ` ${this.aviso()}.` : '';
+    this.anuncio.set(texto + resumen + aviso);
   }
 }
 
@@ -199,9 +274,11 @@ function crearLinea(key: string): Linea | null {
     return {
       key,
       nombre: COMBO.nombre,
-      precio: PRECIO_COMBO,
+      precio: precioCombo(ids),
       cantidad: 1,
-      detalle: `${burgers.map((b) => b!.nombre).join(' + ')}, ${INCLUYE_TEXTO}`,
+      // «La Clásica +1€ + La Puerca +1€, ración de patatas y tequeños»: el «+1€» solo
+      // junto a las burgers con suplemento
+      detalle: `${burgers.map((b) => b!.nombre + (suplementoCombo(b!.id) ? ` +${eurosCorto(suplementoCombo(b!.id))}` : '')).join(' + ')}, ${INCLUYE_TEXTO}`,
       combo: true,
     };
   }

@@ -23,14 +23,16 @@ Web de una sola página de Kanalla Skybar, gastrobar con terraza rooftop y burge
 - **Pide directo, sin intermediarios.** Se pide al local por WhatsApp o teléfono; la web no menciona ni enlaza Glovo, Uber Eats, Just Eat ni ninguna otra plataforma.
 - **Burger de barrio con carácter canalla**: vaca de la Sierra de Guadarrama (La Kanalla), recetas propias (mermelada de bacon casera, cochinita pibil a baja temperatura) y una voz con humor.
 - **Espacio solo exterior**: se reserva únicamente en la terraza.
-- **Premio por pedir directo: COMBO SOFÁ.** Dos hamburguesas a elegir (todas menos la del mes y el menú infantil), ración de patatas y tequeños por 35,00€; te ahorras hasta 7€. Solo pidiendo directo, por WhatsApp o teléfono. El mensaje de WhatsApp lleva «COMBO SOFÁ» para poder contarlo. Precio y reglas en `carta.json` (`combo`).
+- **Premio por pedir directo: COMBO SOFÁ.** Dos hamburguesas a elegir (se puede repetir; todas menos la del mes y el menú infantil), ración de patatas y tequeños. Precio base 35,00 €; La Puerca y La Clásica suman 1 € cada una, así que sale por 35, 36 o 37 €. No incluye bebida. El ahorro es carta (burgers + patatas 4 € + tequeños 12 €) menos el precio del combo: hasta 8 €. Solo pidiendo directo, por WhatsApp o teléfono. Precio, suplementos y reglas en `carta.json` (`combo`).
 
 ## Operating Context
 
-- Pedidos: WhatsApp `https://wa.me/34668569390` con mensaje precargado y teléfono `+34 668 56 93 90`. Zonas de reparto: Galapagar · Colmenarejo · Collado Villalba · Torrelodones.
-- **La comanda** (en la web): el cliente apunta platos con «+», el ticket se guarda en su navegador y «Mandar por WhatsApp» abre WhatsApp con los platos, las cantidades, el total orientativo y «Dirección: ». Sin backend, sin pago y sin tocar las reservas. El total y la hora de entrega se confirman por WhatsApp.
+- Pedidos: WhatsApp `https://wa.me/34668569390` con mensaje precargado y teléfono `+34 668 56 93 90`. Zonas de reparto: Galapagar · Colmenarejo · Torrelodones · Collado Villalba.
+- **La web, el asistente de pedidos y el TPV tienen que decir lo mismo.** El cliente arma la comanda en la web y la manda por WhatsApp al asistente de pedidos (n8n + Claude), que crea el pedido en el TPV Last.app. Fuente de verdad de precios: el TPV (catálogo «KANALLA PEDIDOS»). Fuente de verdad de horario: el del asistente.
+- **La comanda** (en la web): el cliente apunta platos con «+» y elige su zona de reparto (obligatoria). El ticket suma el envío (2,00 €, línea propia) y comprueba el pedido mínimo de la zona sobre los productos, sin el envío: si no llega, avisa («Te faltan X € para el mínimo de <zona>») y el botón de WhatsApp queda desactivado. Se guarda en su navegador. Sin backend, sin pago y sin tocar las reservas.
+- **Mensaje de WhatsApp: formato fijo, lo lee el asistente.** Empieza exactamente por «Hola Kanalla, quiero hacer un pedido a domicilio:», lleva una línea por producto (`1 x La Kanalla: 13,50€`), el combo como «COMBO SOFÁ» con «+1€» solo junto a La Puerca o La Clásica, y después «Zona:», «Envío:», «Total orientativo:» y «Dirección:». No cambiarlo sin cambiar también el asistente (`comanda.service.ts`; hay pruebas que lo fijan).
 - Reservas: formulario existente (login con Google + Supabase, comprobación de aforo por RPC). La web avisa antes de enviar de que se pedirá entrar con Google. El dueño revisa las reservas en `admin.kanallaskybar.es` y **llama al cliente para confirmar**: es la única promesa de confirmación que hace la web.
-- Horario oficial: lunes cerrado; martes a jueves 19:00–23:30; viernes a domingo 12:00–16:00 y 19:00–00:00.
+- Horario oficial (cabecera «Hoy», pie y JSON-LD; manda el del asistente): lunes cerrado; martes a jueves 19:45–23:00; viernes y sábado 13:00–15:30 y 19:45–23:30; domingo 13:00–15:30 y 19:45–23:00. El formulario de reservas no usa este horario: lee el suyo de Supabase (`restaurant_schedule`).
 - Dirección: Av. de las Víctimas del Terrorismo, 1, 28420 Galapagar (Madrid). Instagram `@kanallaskybar`.
 - Carta en papel impresa (diseño "Carta", nov 2026) que la web traslada; datos en `frontend/src/data/carta.json`.
 
@@ -42,7 +44,7 @@ Web de una sola página de Kanalla Skybar, gastrobar con terraza rooftop y burge
 - SEO: JSON-LD `Restaurant` (telephone, areaServed, hasMenu), Open Graph, sitemap y robots.
 - Sin analítica (no había).
 - Horario de reparto = horario del local (confirmado por el dueño).
-- **Pedido mínimo y envío (confirmados por el dueño el 12-11-2026):** mínimo de 20 € en Galapagar, 30 € en Colmenarejo y 40 € en Collado Villalba y Torrelodones; envío, 2 €. Están en `local.json` (`pedidoMinimo`, `gastosEnvio`) y se muestran en el ticket; el envío va aparte del total orientativo.
+- **Pedido mínimo y envío:** mínimo de 20 € en Galapagar, 30 € en Colmenarejo y 40 € en Torrelodones y Collado Villalba, sobre los productos sin el envío; envío fijo de 2,00 €, que se suma al total. Están en `local.json` (`pedidoMinimo`, `gastosEnvio`).
 
 ## Brand Commitments
 

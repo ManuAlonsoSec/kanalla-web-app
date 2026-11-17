@@ -6,7 +6,7 @@ const PLURAL: Record<string, string> = { sábado: 'sábados', domingo: 'domingos
 export interface Hoy {
   /** «jueves» */
   dia: string;
-  /** «19:00–23:30», «12:00–16:00 y 19:00–00:00» o «Los lunes descansamos» */
+  /** «19:45–23:00», «13:00–15:30 y 19:45–23:30» o «Los lunes descansamos» */
   texto: string;
   abierto: boolean;
 }

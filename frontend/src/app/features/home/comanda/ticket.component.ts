@@ -10,9 +10,9 @@ import {
   input,
   viewChild,
 } from '@angular/core';
-import { LOCAL, euros } from '../../../../data/datos';
+import { LOCAL, euros, eurosCorto, minimoDe } from '../../../../data/datos';
 import { prefersReducedMotion } from '../../../core/motion';
-import { ComandaService } from './comanda.service';
+import { ComandaService, ENVIO } from './comanda.service';
 
 /**
  * El ticket de la comanda: tira de papel kraft que sale de una ranura.
@@ -62,6 +62,33 @@ import { ComandaService } from './comanda.service';
           }
         </ul>
 
+        <!-- Zona de reparto: obligatoria. De ella sale el pedido mínimo. -->
+        <div class="ticket__zona">
+          <label class="ticket__zona-label" [for]="id('zona')">¿Dónde te lo llevamos?</label>
+          <select
+            class="ticket__zona-select"
+            [id]="id('zona')"
+            required
+            [attr.aria-describedby]="comanda.aviso() ? id('aviso') : null"
+            (change)="zona($event)"
+          >
+            <option value="" [selected]="!comanda.zona()">Elige tu zona</option>
+            @for (z of zonas; track z.nombre) {
+              <option [value]="z.nombre" [selected]="z.nombre === comanda.zona()">{{ z.nombre }} · mínimo {{ z.minimo }}</option>
+            }
+          </select>
+        </div>
+
+        <dl class="ticket__cuenta">
+          <div class="ticket__fila">
+            <dt>Productos</dt>
+            <dd>{{ subtotal() }}</dd>
+          </div>
+          <div class="ticket__fila">
+            <dt>Envío</dt>
+            <dd>{{ envio() }}</dd>
+          </div>
+        </dl>
         <p class="ticket__total">
           <span>Total orientativo</span>
           <span class="ticket__suma">{{ total() }}</span>
@@ -69,42 +96,51 @@ import { ComandaService } from './comanda.service';
         @if (comanda.aConsultar()) {
           <p class="ticket__nota">La hamburguesa del mes, a consultar.</p>
         }
+        @if (comanda.aviso(); as aviso) {
+          <p class="ticket__aviso" [id]="id('aviso')" role="status">{{ aviso }}</p>
+        }
       } @else {
         <p class="ticket__vacio">
           Aún no has apuntado nada. Toca + en la carta y lo vamos escribiendo aquí.
         </p>
+        <!-- Sin comanda todavía: lo que hay que saber antes de pedir -->
+        <div class="ticket__reparto">
+          <p class="ticket__reparto-cab" [id]="id('minimo')">Pedido mínimo</p>
+          <dl [attr.aria-labelledby]="id('minimo')">
+            @for (z of zonas; track z.nombre) {
+              <div class="ticket__tramo">
+                <dt>{{ z.nombre }}</dt>
+                <dd>{{ z.minimo }}</dd>
+              </div>
+            }
+          </dl>
+          <p class="ticket__tramo ticket__tramo--envio">
+            <span>Envío</span>
+            <span class="ticket__importe">{{ envioFijo }}</span>
+          </p>
+        </div>
       }
 
       <div class="ticket__notas">
-        @if (local.pedidoMinimo?.length || local.gastosEnvio) {
-          <div class="ticket__reparto">
-            @if (local.pedidoMinimo?.length) {
-              <p class="ticket__reparto-cab" [id]="'ticket-' + variante() + '-minimo'">Pedido mínimo</p>
-              <dl [attr.aria-labelledby]="'ticket-' + variante() + '-minimo'">
-                @for (m of local.pedidoMinimo; track m.importe) {
-                  <div class="ticket__tramo">
-                    <dt>{{ m.zonas.join(' y ') }}</dt>
-                    <dd>{{ m.importe }}</dd>
-                  </div>
-                }
-              </dl>
-            }
-            @if (local.gastosEnvio) {
-              <p class="ticket__tramo ticket__tramo--envio">
-                <span>Envío, aparte del total</span>
-                <span class="ticket__importe">{{ local.gastosEnvio }}</span>
-              </p>
-            }
-          </div>
-        }
         <p class="ticket__nota">Precio orientativo. Te confirmamos total y hora de entrega por WhatsApp.</p>
         <p class="ticket__nota ticket__nota--fuerte">¿Alergias? Avísanos en el mensaje.</p>
       </div>
 
       <div class="ticket__acciones">
-        <a class="k-btn k-btn--block" [href]="comanda.whatsapp()" target="_blank" rel="noopener">
-          <span>{{ comanda.lineas().length ? 'Mandar por WhatsApp' : 'Escríbenos por WhatsApp' }}<span class="sr-only"> (se abre WhatsApp)</span></span>
-        </a>
+        @if (!comanda.lineas().length) {
+          <a class="k-btn k-btn--block" [href]="comanda.whatsapp()" target="_blank" rel="noopener">
+            <span>Escríbenos por WhatsApp<span class="sr-only"> (se abre WhatsApp)</span></span>
+          </a>
+        } @else if (comanda.puedeEnviar()) {
+          <a class="k-btn k-btn--block ticket__enviar" [href]="comanda.whatsapp()" target="_blank" rel="noopener">
+            <span>Mandar por WhatsApp<span class="sr-only"> (se abre WhatsApp)</span></span>
+          </a>
+        } @else {
+          <!-- Sin zona o sin llegar al mínimo: desactivado; el motivo está en el aviso de arriba -->
+          <button type="button" class="k-btn k-btn--block ticket__enviar" disabled [attr.aria-describedby]="id('aviso')">
+            <span>Mandar por WhatsApp</span>
+          </button>
+        }
         <a class="k-btn k-btn--line k-btn--block" [href]="local.telefono.href">
           <span>Prefiero llamar<span class="sr-only"> al {{ local.telefono.texto }}</span></span>
         </a>
@@ -127,6 +163,11 @@ export class TicketComponent {
   protected readonly local = LOCAL;
   protected readonly euros = euros;
   protected readonly total = computed(() => euros(this.comanda.total()));
+  protected readonly subtotal = computed(() => euros(this.comanda.subtotal()));
+  protected readonly envio = computed(() => euros(this.comanda.envio()));
+  protected readonly envioFijo = euros(ENVIO);
+  /** Zonas de reparto con su pedido mínimo, en el orden del selector. */
+  protected readonly zonas = LOCAL.zonasReparto.map((nombre) => ({ nombre, minimo: eurosCorto(minimoDe(nombre)) }));
 
   private readonly papel = viewChild.required<ElementRef<HTMLElement>>('papel');
   private readonly doc = inject(DOCUMENT);
@@ -146,6 +187,10 @@ export class TicketComponent {
       const linea = papel.querySelector<HTMLElement>(`[data-key="${CSS.escape(imp.key)}"]`);
       linea?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150, easing: 'linear' });
     });
+  }
+
+  protected zona(e: Event): void {
+    this.comanda.elegirZona((e.target as HTMLSelectElement).value || null);
   }
 
   protected id(parte: string): string {
