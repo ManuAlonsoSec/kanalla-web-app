@@ -8,11 +8,12 @@ import {
   computed,
   inject,
   input,
+  signal,
   viewChild,
 } from '@angular/core';
 import { LOCAL, euros, eurosCorto, minimoDe } from '../../../../data/datos';
 import { prefersReducedMotion } from '../../../core/motion';
-import { ComandaService, ENVIO } from './comanda.service';
+import { ComandaService, ENVIO, EXTRAS, type Linea } from './comanda.service';
 
 /**
  * El ticket de la comanda: tira de papel kraft que sale de una ranura.
@@ -38,7 +39,7 @@ import { ComandaService, ENVIO } from './comanda.service';
 
       @if (comanda.lineas().length) {
         <ul class="ticket__lineas" role="list">
-          @for (l of comanda.lineas(); track l.key) {
+          @for (l of comanda.lineas(); track l.uid) {
             <li class="ticket__linea" [attr.data-key]="l.key">
               <span class="ticket__nombre">
                 <span class="sr-only">{{ l.cantidad }} × </span>{{ l.nombre }}
@@ -58,6 +59,41 @@ import { ComandaService, ENVIO } from './comanda.service';
                   <span class="sr-only">Añadir otra: {{ l.nombre }}</span>
                 </button>
               </span>
+              @if (l.burgers.length) {
+                <!-- Extras: van con su burger, nunca como línea suelta -->
+                <div class="ticket__extras">
+                  <button
+                    type="button"
+                    class="ticket__extras-btn"
+                    [attr.aria-expanded]="abierta(l.uid)"
+                    [attr.aria-controls]="id('extras-' + l.uid)"
+                    (click)="alternarPanel(l.uid)"
+                  >
+                    <svg viewBox="0 0 12 8" aria-hidden="true" focusable="false"><path d="M1 1l5 5 5-5" /></svg>
+                    <span>{{ conExtras(l) ? 'Cambiar extras' : 'Añadir extras' }}<span class="sr-only">: {{ l.nombre }}</span></span>
+                  </button>
+                  @if (abierta(l.uid)) {
+                    <div class="ticket__extras-panel" [id]="id('extras-' + l.uid)">
+                      @for (b of l.burgers; track $index; let i = $index) {
+                        <fieldset class="ticket__extras-grupo">
+                          <legend>{{ l.combo ? b.nombre : l.cantidad > 1 ? 'Para cada una de las ' + l.cantidad : 'Para esta burger' }}</legend>
+                          @for (e of extras; track e.id) {
+                            <label class="ticket__extra">
+                              <input
+                                type="checkbox"
+                                [checked]="b.extras.includes(e.id)"
+                                (change)="comanda.alternarExtra(l.key, i, e.id)"
+                              />
+                              <span class="ticket__extra-n">{{ e.nombre }}</span>
+                              <span class="ticket__extra-p">+{{ e.precio }}</span>
+                            </label>
+                          }
+                        </fieldset>
+                      }
+                    </div>
+                  }
+                </div>
+              }
             </li>
           }
         </ul>
@@ -166,6 +202,10 @@ export class TicketComponent {
   protected readonly subtotal = computed(() => euros(this.comanda.subtotal()));
   protected readonly envio = computed(() => euros(this.comanda.envio()));
   protected readonly envioFijo = euros(ENVIO);
+  /** Extras que se le pueden poner a una burger, con su precio («+1,50€»). */
+  protected readonly extras = EXTRAS.map((p) => ({ id: p.id, nombre: p.enTicket ?? p.nombre, precio: p.precio.replace('+', '') }));
+  /** Líneas con el panel de extras desplegado (por uid: sobrevive a cambiar de extras). */
+  private readonly paneles = signal<ReadonlySet<number>>(new Set());
   /** Zonas de reparto con su pedido mínimo, en el orden del selector. */
   protected readonly zonas = LOCAL.zonasReparto.map((nombre) => ({ nombre, minimo: eurosCorto(minimoDe(nombre)) }));
 
@@ -187,6 +227,22 @@ export class TicketComponent {
       const linea = papel.querySelector<HTMLElement>(`[data-key="${CSS.escape(imp.key)}"]`);
       linea?.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 150, easing: 'linear' });
     });
+  }
+
+  protected abierta(uid: number): boolean {
+    return this.paneles().has(uid);
+  }
+
+  protected alternarPanel(uid: number): void {
+    this.paneles.update((set) => {
+      const nuevo = new Set(set);
+      if (!nuevo.delete(uid)) nuevo.add(uid);
+      return nuevo;
+    });
+  }
+
+  protected conExtras(l: Linea): boolean {
+    return l.burgers.some((b) => b.extras.length > 0);
   }
 
   protected zona(e: Event): void {

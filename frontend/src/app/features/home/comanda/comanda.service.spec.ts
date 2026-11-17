@@ -1,9 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { LOCAL } from '../../../../data/datos';
 import {
   AHORRO_MAX,
   BURGERS_COMBO,
   ComandaService,
+  EXTRAS,
   INICIO_PEDIDO,
+  SALUDO,
   ahorroCombo,
   comboKey,
   precioCombo,
@@ -229,8 +232,135 @@ describe('ComandaService', () => {
     expect(decodeURIComponent(comanda.whatsapp().split('text=')[1])).toBe(m);
   });
 
-  it('sin nada apuntado, el mensaje es un saludo (no un pedido)', () => {
-    expect(comanda.mensaje()).toBe('Hola Kanalla, quiero hacer un pedido a domicilio.');
+  it('sin comanda, el mensaje es exactamente el saludo que reconoce el asistente (sin dos puntos ni productos)', () => {
+    expect(SALUDO).toBe('Hola Kanalla, quiero hacer un pedido a domicilio');
+    expect(comanda.mensaje()).toBe('Hola Kanalla, quiero hacer un pedido a domicilio');
+    expect(decodeURIComponent(comanda.whatsapp().split('text=')[1])).toBe('Hola Kanalla, quiero hacer un pedido a domicilio');
+    // El talón «Pide directo» y la barra del móvil usan el mismo saludo
+    expect(decodeURIComponent(LOCAL.whatsapp.href.split('text=')[1])).toBe('Hola Kanalla, quiero hacer un pedido a domicilio');
+    expect(LOCAL.whatsapp.href.startsWith('https://wa.me/34668569390?text=')).toBe(true);
+  });
+
+  // ── Extras: siempre con su burger ───────────────────────────────────────────
+  it('los extras de burger son carne, huevo/bacon, aguacate, queso y pan sin gluten', () => {
+    expect(EXTRAS.map((p) => p.id)).toEqual(['carne', 'huevo-bacon', 'aguacate', 'queso', 'pan-sin-gluten']);
+  });
+
+  it('un extra no se puede apuntar suelto', () => {
+    for (const e of EXTRAS) comanda.apuntar(e.id);
+    expect(comanda.lineas().length).toBe(0);
+  });
+
+  it('solo las hamburguesas admiten extras', () => {
+    comanda.apuntar('tequenos~queso');
+    comanda.apuntar('la-kanalla~tequenos');
+    comanda.apuntar('la-kanalla~queso.queso');
+    expect(comanda.lineas().length).toBe(0);
+    comanda.apuntar('tequenos');
+    expect(comanda.lineas()[0].burgers).toEqual([]);
+    comanda.alternarExtra('tequenos', 0, 'queso');
+    expect(comanda.lineas().map((l) => l.key)).toEqual(['tequenos']);
+  });
+
+  it('el extra va con su burger: nombre, precio y mensaje', () => {
+    comanda.apuntar('la-ramona-2-0');
+    comanda.alternarExtra('la-ramona-2-0', 0, 'queso');
+    const l = comanda.lineas()[0];
+    expect(l.key).toBe('la-ramona-2-0~queso');
+    expect(l.precio).toBe(1270 + 150);
+    expect(l.detalle).toBe('+ extra de queso');
+    expect(comanda.mensaje()).toContain('1 x La Ramona 2.0 (+ extra de queso): 14,20€');
+    // y se quita igual
+    comanda.alternarExtra('la-ramona-2-0~queso', 0, 'queso');
+    expect(comanda.lineas()[0].key).toBe('la-ramona-2-0');
+    expect(comanda.mensaje()).toContain('1 x La Ramona 2.0: 12,70€');
+  });
+
+  it('varios extras en la misma burger, en el orden de la carta', () => {
+    comanda.apuntar('la-kanalla');
+    comanda.alternarExtra('la-kanalla', 0, 'pan-sin-gluten');
+    comanda.alternarExtra('la-kanalla~pan-sin-gluten', 0, 'carne');
+    comanda.alternarExtra('la-kanalla~carne.pan-sin-gluten', 0, 'aguacate');
+    expect(comanda.lineas()[0].key).toBe('la-kanalla~carne.aguacate.pan-sin-gluten');
+    expect(comanda.lineas()[0].precio).toBe(1350 + 600 + 200 + 100);
+    expect(comanda.mensaje()).toContain('1 x La Kanalla (+ extra de carne, extra de aguacate y pan sin gluten): 22,50€');
+  });
+
+  it('el extra vale para todas las unidades de la línea y conserva la línea', () => {
+    comanda.apuntar('la-puerca');
+    comanda.apuntar('la-puerca');
+    const uid = comanda.lineas()[0].uid;
+    comanda.alternarExtra('la-puerca', 0, 'queso');
+    expect(comanda.lineas().length).toBe(1);
+    expect(comanda.lineas()[0].uid).toBe(uid);
+    expect(comanda.lineas()[0].cantidad).toBe(2);
+    expect(comanda.subtotal()).toBe((1400 + 150) * 2);
+    expect(comanda.porPlato().get('la-puerca')).toBe(2);
+    expect(comanda.mensaje()).toContain('2 x La Puerca (+ extra de queso): 31,00€');
+  });
+
+  it('una burger con extra y otra sin él son dos líneas; si quedan iguales, se juntan', () => {
+    comanda.apuntar('la-puerca');
+    comanda.alternarExtra('la-puerca', 0, 'queso');
+    comanda.apuntar('la-puerca');
+    expect(comanda.lineas().map((l) => [l.key, l.cantidad])).toEqual([['la-puerca~queso', 1], ['la-puerca', 1]]);
+    comanda.alternarExtra('la-puerca', 0, 'queso');
+    expect(comanda.lineas().map((l) => [l.key, l.cantidad])).toEqual([['la-puerca~queso', 2]]);
+  });
+
+  it('en el combo, cada burger lleva sus extras', () => {
+    comanda.apuntar(comboKey(['la-puerca', 'la-clasica']));
+    const key = comanda.lineas()[0].key;
+    expect(comanda.lineas()[0].burgers.map((b) => b.nombre)).toEqual(['La Clásica', 'La Puerca']);
+    comanda.alternarExtra(key, 1, 'queso');
+    const l = comanda.lineas()[0];
+    expect(l.key).toBe('combo-sofa:la-clasica+la-puerca~queso');
+    expect(l.precio).toBe(3700 + 150);
+    expect(comanda.mensaje()).toContain(
+      '1 x COMBO SOFÁ (La Clásica +1€ + La Puerca +1€ con extra de queso, ración de patatas y tequeños): 38,50€',
+    );
+  });
+
+  it('ACEPTACIÓN: ningún extra aparece como línea suelta en el mensaje', () => {
+    comanda.apuntar(comboKey(['la-kanalla', 'la-bribona']));
+    comanda.apuntar('la-puerca');
+    comanda.apuntar('racion-de-patatas');
+    comanda.alternarExtra(comanda.lineas()[0].key, 0, 'aguacate');
+    comanda.alternarExtra('la-puerca', 0, 'carne');
+    comanda.alternarExtra('la-puerca~carne', 0, 'huevo-bacon');
+    comanda.elegirZona('Galapagar');
+    const productos = comanda
+      .mensaje()
+      .split('\n')
+      .filter((l) => /^\d+ x /.test(l));
+    expect(productos).toEqual([
+      '1 x COMBO SOFÁ (La Bribona con extra de aguacate + La Kanalla, ración de patatas y tequeños): 37,00€',
+      '1 x La Puerca (+ extra de carne y extra de huevo o bacon): 21,50€',
+      '1 x Ración de patatas: 4,00€',
+    ]);
+    for (const l of productos) expect(l).not.toMatch(/^\d+ x (Extra|Pan sin gluten|Carne|Queso|Aguacate|Huevo)/i);
+  });
+
+  it('ACEPTACIÓN: el mensaje del brief sale tal cual (combo con extra + La Ramona 2.0 con extra, a Colmenarejo)', () => {
+    comanda.apuntar(comboKey(['la-clasica', 'la-puerca']));
+    comanda.alternarExtra(comanda.lineas()[0].key, 1, 'queso');
+    comanda.apuntar('la-ramona-2-0');
+    comanda.alternarExtra('la-ramona-2-0', 0, 'queso');
+    comanda.elegirZona('Colmenarejo');
+    expect(comanda.mensaje()).toBe(
+      [
+        'Hola Kanalla, quiero hacer un pedido a domicilio:',
+        '',
+        '1 x COMBO SOFÁ (La Clásica +1€ + La Puerca +1€ con extra de queso, ración de patatas y tequeños): 38,50€',
+        '1 x La Ramona 2.0 (+ extra de queso): 14,20€',
+        '',
+        'Zona: Colmenarejo',
+        'Envío: 2,00€',
+        'Total orientativo: 54,70€',
+        '',
+        'Dirección: ',
+      ].join('\n'),
+    );
   });
 
   // ── Guardado en el navegador ────────────────────────────────────────────────
@@ -238,17 +368,19 @@ describe('ComandaService', () => {
     comanda.restaurar();
     comanda.apuntar('la-puerca');
     comanda.apuntar('la-puerca');
+    comanda.alternarExtra('la-puerca', 0, 'queso');
     comanda.elegirZona('Torrelodones');
     TestBed.tick();
-    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!)).toEqual([{ key: 'la-puerca', cantidad: 2 }]);
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!)).toEqual([{ key: 'la-puerca~queso', cantidad: 2 }]);
     expect(localStorage.getItem(ZONA_KEY)).toBe('Torrelodones');
 
     TestBed.resetTestingModule();
     const otra = TestBed.inject(ComandaService);
     otra.restaurar();
-    expect(otra.subtotal()).toBe(2800);
+    expect(otra.subtotal()).toBe(3100);
     expect(otra.zona()).toBe('Torrelodones');
-    expect(otra.falta()).toBe(1200);
+    expect(otra.falta()).toBe(900);
+    expect(otra.lineas()[0].burgers[0].extras).toEqual(['queso']);
   });
 
   it('descarta lo guardado si está corrupto o trae platos o zonas que ya no existen', () => {
@@ -258,7 +390,14 @@ describe('ComandaService', () => {
 
     localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify([{ key: 'plato-retirado', cantidad: 2 }, { key: 'la-puerca', cantidad: 999 }, { key: 'la-puerca', cantidad: 1 }, null, 7]),
+      JSON.stringify([
+        { key: 'plato-retirado', cantidad: 2 },
+        { key: 'la-puerca', cantidad: 999 },
+        { key: 'la-puerca', cantidad: 1 },
+        { key: 'queso', cantidad: 1 }, // extra suelto de una comanda guardada con la versión anterior
+        null,
+        7,
+      ]),
     );
     localStorage.setItem(ZONA_KEY, 'Majadahonda');
     TestBed.resetTestingModule();

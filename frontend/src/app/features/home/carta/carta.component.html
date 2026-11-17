@@ -48,13 +48,19 @@
             }
             {{ p.precio }}
           </span>
-          <button type="button" class="plato__mas plato__mas--s" (click)="apuntar(p.id)">
-            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5v11M2.5 8h11" /></svg>
-            <span class="sr-only">Apuntar {{ p.enTicket ?? p.nombre }}@if (cuantos(p.id)) {, llevas {{ cuantos(p.id) }}}</span>
-          </button>
+          <!-- Los extras de burger no se apuntan sueltos: se añaden a su burger en la comanda -->
+          @if (!p.conBurger) {
+            <button type="button" class="plato__mas plato__mas--s" (click)="apuntar(p.id)">
+              <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 2.5v11M2.5 8h11" /></svg>
+              <span class="sr-only">Apuntar {{ p.enTicket ?? p.nombre }}@if (cuantos(p.id)) {, llevas {{ cuantos(p.id) }}}</span>
+            </button>
+          }
         </li>
       }
     </ul>
+    @if (sec.notaExtra) {
+      <p class="sec__ayuda">{{ sec.notaExtra }}</p>
+    }
   </section>
 </ng-template>
 

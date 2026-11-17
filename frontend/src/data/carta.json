@@ -1,6 +1,6 @@
 {
   "actualizada": "2026-11",
-  "_ayuda": "Edita aquí la carta. Los precios mandan los del TPV (catálogo «KANALLA PEDIDOS» de Last.app): si cambian allí, se cambian aquí. id: identificador del plato en la comanda (no lo cambies si no cambia el plato). precio: texto tal cual se muestra (13,50€); «Consultar» si no tiene precio fijo. nuevo: kicker encima del nombre, o null. enTicket: cómo se llama en la comanda y en el WhatsApp si no basta el nombre (extras). alergenos: nombres de fila en alergenos.json, \"consulta\" para mostrar 'Consulta al personal' en la tabla, o \"nota\" si ya lo cubre la nota general. fotos: slugs de datos.ts. El orden de las secciones es el de la web.",
+  "_ayuda": "Edita aquí la carta. Los precios mandan los del TPV (catálogo «KANALLA PEDIDOS» de Last.app): si cambian allí, se cambian aquí. id: identificador del plato en la comanda (no lo cambies si no cambia el plato). precio: texto tal cual se muestra (13,50€); «Consultar» si no tiene precio fijo. nuevo: kicker encima del nombre, o null. enTicket: cómo se llama en la comanda y en el WhatsApp si no basta el nombre (extras). conBurger: true en los extras que solo se piden junto a una hamburguesa (no se apuntan sueltos; en el WhatsApp van con su burger). alergenos: nombres de fila en alergenos.json, \"consulta\" para mostrar 'Consulta al personal' en la tabla, o \"nota\" si ya lo cubre la nota general. fotos: slugs de datos.ts. El orden de las secciones es el de la web.",
   "secciones": [
     {
       "id": "hamburguesas",
@@ -111,7 +111,8 @@
           "descripcion": null,
           "nuevo": null,
           "alergenos": "nota",
-          "enTicket": "Extra de carne"
+          "enTicket": "Extra de carne",
+          "conBurger": true
         },
         {
           "id": "huevo-bacon",
@@ -120,7 +121,8 @@
           "descripcion": null,
           "nuevo": null,
           "alergenos": "nota",
-          "enTicket": "Extra de huevo o bacon"
+          "enTicket": "Extra de huevo o bacon",
+          "conBurger": true
         },
         {
           "id": "aguacate",
@@ -129,7 +131,8 @@
           "descripcion": null,
           "nuevo": null,
           "alergenos": "nota",
-          "enTicket": "Extra de aguacate"
+          "enTicket": "Extra de aguacate",
+          "conBurger": true
         },
         {
           "id": "queso",
@@ -138,7 +141,8 @@
           "descripcion": null,
           "nuevo": null,
           "alergenos": "nota",
-          "enTicket": "Extra de queso"
+          "enTicket": "Extra de queso",
+          "conBurger": true
         },
         {
           "id": "pan-sin-gluten",
@@ -147,7 +151,8 @@
           "descripcion": null,
           "nuevo": null,
           "alergenos": "nota",
-          "enTicket": "Pan sin gluten"
+          "enTicket": "Pan sin gluten",
+          "conBurger": true
         },
         {
           "id": "racion-de-patatas",
@@ -159,7 +164,7 @@
         }
       ],
       "nota": null,
-      "notaExtra": null
+      "notaExtra": "Los extras van con su burger: apúntala y añádeselos en tu comanda."
     },
     {
       "id": "entrantes",

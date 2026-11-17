@@ -18,6 +18,8 @@ export interface Plato {
   nuevo: string | null;
   /** Nombre en la comanda y en el WhatsApp cuando no basta el de la carta (extras). */
   enTicket?: string;
+  /** Extra que solo se pide junto a una hamburguesa: no se apunta suelto. */
+  conBurger?: boolean;
   /** Filas de alergenos.json, 'consulta' (fila "Consulta al personal") o 'nota' (cubierto por la nota). */
   alergenos: string[] | 'consulta' | 'nota';
 }

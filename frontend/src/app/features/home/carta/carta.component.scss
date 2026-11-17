@@ -370,6 +370,18 @@
 }
 
 // ── Extras y bebidas: tira entre filetes ───────────────────────────────────────────────
+// Cómo se piden los extras: bajo la tira
+.sec__ayuda {
+  max-width: 52ch;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.35;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  text-wrap: pretty;
+}
+
 // Aclaración junto al título de la tira («En lata.»)
 .sec__sub {
   margin-left: 0.5rem;
